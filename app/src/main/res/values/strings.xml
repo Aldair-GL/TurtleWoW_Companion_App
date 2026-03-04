@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">Turtle WoW Companion</string>
+    <string name="screen_title">Guía Turtle WoW</string>
+    <string name="tab_objects">Objetos</string>
+    <string name="tab_lore">Lore</string>
+    <string name="tab_maps">Mapas</string>
+    <string name="tab_classes">Clases</string>
 </resources>
