@@ -37,6 +37,21 @@ La aplicación sigue una base **MVVM**, consume backend mediante Retrofit y mant
 - Persistencia local con Room (`guide_entries`)
 - Cliente Retrofit preparado para backend Spring Boot (`http://10.0.2.2:8080/api/guia/{category}`)
 - Repositorio con fallback local (seed data) cuando la API no está disponible
+- Modo de validación sin Android SDK/Google Maven (`-PskipAndroid=true`) para poder seguir testeando lógica core en entornos restringidos
+
+## 🛠️ Workaround para CI/entornos restringidos
+
+Si el entorno no puede resolver `dl.google.com` (dependencia del plugin Android), se puede continuar el desarrollo y pruebas de lógica con:
+
+```bash
+./gradlew -PskipAndroid=true :core:test
+```
+
+Para build Android completo (requiere acceso normal a repositorios de Android/Google):
+
+```bash
+./gradlew :app:assembleDebug
+```
 
 ## 🏗️ Estructura del proyecto
 
