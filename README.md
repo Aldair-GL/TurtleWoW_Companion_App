@@ -10,9 +10,13 @@
 
 Este repositorio contiene la **aplicación Android desarrollada en Kotlin** para el Proyecto Final de Desarrollo Multiplataforma.  
 
-La app consume la **API REST del backend Spring Boot**, mostrando datos de usuarios, productos y pedidos, y permitiendo interacciones como crear, listar o modificar registros.  
+La app está orientada a ser una **companion app de Turtle WoW**, con secciones de:
+- Objetos
+- Lore
+- Mapas
+- Clases
 
-Está diseñada siguiendo **arquitectura MVVM**, con Retrofit para la comunicación HTTP y Room/SharedPreferences para almacenamiento local si es necesario.
+La aplicación sigue una base **MVVM**, consume backend mediante Retrofit y mantiene datos locales con Room para uso offline.
 
 ---
 
@@ -27,18 +31,22 @@ Está diseñada siguiendo **arquitectura MVVM**, con Retrofit para la comunicaci
 
 ---
 
+## ✅ Estado actual del desarrollo
+
+- UI principal en español con pestañas por categoría (Objetos, Lore, Mapas, Clases)
+- Persistencia local con Room (`guide_entries`)
+- Cliente Retrofit preparado para backend Spring Boot (`http://10.0.2.2:8080/api/guia/{category}`)
+- Repositorio con fallback local (seed data) cuando la API no está disponible
+
 ## 🏗️ Estructura del proyecto
 
 ```text
-com/tuempresa/proyectofinal
+com/example/turtlewowcompanion
 │
-├─ model/           → Data classes que reflejan las entidades del backend
-├─ network/         → Retrofit interfaces y API client
-├─ repository/      → Maneja la lógica de obtención de datos (API o cache)
-├─ viewmodel/       → ViewModels que exponen LiveData a la UI
-├─ ui/              → Activities y Fragments organizados por feature
-│   ├─ main/        → Pantallas principales
-│   ├─ login/       → Login y registro
-│   └─ product/     → Gestión de productos y pedidos
-├─ util/            → Constantes, helpers, extensiones
-└─ App.kt           → Clase Application para inicialización global
+├─ data/
+│  ├─ local/        → Room (DB, DAO, Entity)
+│  ├─ remote/       → Retrofit API client
+│  └─ GuideRepository.kt
+├─ ui/
+│  └─ GuideViewModel.kt
+└─ MainActivity.kt  → UI Compose principal
