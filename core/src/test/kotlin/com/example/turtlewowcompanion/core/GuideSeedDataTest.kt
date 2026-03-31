@@ -6,7 +6,7 @@ import kotlin.test.assertTrue
 
 class GuideSeedDataTest {
     @Test
-    fun `all categories provide non-empty localized seed entries`() {
+    fun `todas las categorias tienen seed data con titulos y descripciones`() {
         GuideCategory.entries.forEach { category ->
             val entries = GuideSeedData.seedFor(category)
             assertTrue(entries.isNotEmpty())
