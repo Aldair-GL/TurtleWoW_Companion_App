@@ -1,8 +1,14 @@
 <resources>
     <string name="app_name">Turtle WoW Companion</string>
-    <string name="screen_title">Guía Turtle WoW</string>
-    <string name="tab_objects">Objetos</string>
-    <string name="tab_lore">Lore</string>
-    <string name="tab_maps">Mapas</string>
-    <string name="tab_classes">Clases</string>
+    <string name="screen_title">Turtle WoW Companion</string>
+    <string name="nav_home">Inicio</string>
+    <string name="nav_search">Buscar</string>
+    <string name="nav_favorites">Favoritos</string>
+    <string name="nav_settings">Ajustes</string>
+    <string name="tab_zones">Zonas</string>
+    <string name="tab_quests">Quests</string>
+    <string name="tab_npcs">NPCs</string>
+    <string name="btn_retry">Reintentar</string>
+    <string name="no_results">No se encontraron resultados</string>
+    <string name="no_favorites">Aún no tienes favoritos</string>
 </resources>

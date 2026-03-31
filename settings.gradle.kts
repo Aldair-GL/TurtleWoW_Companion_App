@@ -23,8 +23,5 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "Turtle WoW Companion"
-val skipAndroid = providers.gradleProperty("skipAndroid").orNull == "true"
 include(":core")
-if (!skipAndroid) {
-    include(":app")
-}
+include(":app")

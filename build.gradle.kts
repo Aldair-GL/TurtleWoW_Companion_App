@@ -1,16 +1,8 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
-val skipAndroid = gradle.startParameter.projectProperties["skipAndroid"] == "true"
-val agpVersion = "8.1.4"
-
-if (!skipAndroid) {
-    buildscript {
-        repositories {
-            google()
-            mavenCentral()
-        }
-        dependencies {
-            classpath("com.android.tools.build:gradle:$agpVersion")
-            classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:2.0.21")
-        }
-    }
+plugins {
+    id("com.android.application") version "8.9.0" apply false
+    id("org.jetbrains.kotlin.android") version "2.0.21" apply false
+    id("org.jetbrains.kotlin.plugin.compose") version "2.0.21" apply false
+    id("org.jetbrains.kotlin.kapt") version "2.0.21" apply false
+    id("org.jetbrains.kotlin.jvm") version "2.0.21" apply false
 }

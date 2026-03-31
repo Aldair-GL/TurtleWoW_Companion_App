@@ -1,67 +1,75 @@
-# 📱 Proyecto Final – App Android (Kotlin)
+# Turtle WoW Companion
 
-[![Kotlin](https://img.shields.io/badge/Kotlin-1.9-orange)](https://kotlinlang.org/)
-[![Android](https://img.shields.io/badge/Android-12+-green)](https://developer.android.com/)
-[![License](https://img.shields.io/badge/License-MIT-blue)](LICENSE)
+App Android tipo enciclopedia de World of Warcraft Vanilla, desarrollada como proyecto final del ciclo de Desarrollo Multiplataforma.
 
----
+## Descripción
 
-## 📌 Descripción
+Aplicación móvil que permite consultar información sobre zonas, quests, NPCs y más del universo WoW clásico. Consume un backend propio en Spring Boot y mantiene caché local para uso offline.
 
-Este repositorio contiene la **aplicación Android desarrollada en Kotlin** para el Proyecto Final de Desarrollo Multiplataforma.  
+## Tecnologías
 
-La app está orientada a ser una **companion app de Turtle WoW**, con secciones de:
-- Objetos
-- Lore
-- Mapas
-- Clases
+- **Kotlin** + Jetpack Compose
+- **MVVM** con ViewModel y StateFlow
+- **Room** para persistencia local (caché de datos, favoritos, historial de búsqueda)
+- **DataStore Preferences** para ajustes de usuario (tema, configuración)
+- **Retrofit 2** + OkHttp para consumo de API REST
+- **Navigation Compose** para navegación entre pantallas
+- **Coil** para carga de imágenes
+- **Material 3** con tema personalizado inspirado en WoW
 
-La aplicación sigue una base **MVVM**, consume backend mediante Retrofit y mantiene datos locales con Room para uso offline.
+## Estructura del proyecto
 
----
-
-## ⚙️ Tecnologías utilizadas
-
-- **Kotlin** – Lenguaje principal  
-- **Android Studio (2023+)** – IDE recomendado  
-- **Retrofit 2 / OkHttp** – Consumo de API REST  
-- **MVVM + ViewModel + LiveData** – Arquitectura para separación de responsabilidades  
-- **Hilt/Dagger (opcional)** – Inyección de dependencias  
-- **Material Components** – UI moderna y consistente  
-
----
-
-## ✅ Estado actual del desarrollo
-
-- UI principal en español con pestañas por categoría (Objetos, Lore, Mapas, Clases)
-- Persistencia local con Room (`guide_entries`)
-- Cliente Retrofit preparado para backend Spring Boot (`http://10.0.2.2:8080/api/guia/{category}`)
-- Repositorio con fallback local (seed data) cuando la API no está disponible
-- Modo de validación sin Android SDK/Google Maven (`-PskipAndroid=true`) para poder seguir testeando lógica core en entornos restringidos
-
-## 🛠️ Workaround para CI/entornos restringidos
-
-Si el entorno no puede resolver `dl.google.com` (dependencia del plugin Android), se puede continuar el desarrollo y pruebas de lógica con:
-
-```bash
-./gradlew -PskipAndroid=true :core:test
+```
+com.example.turtlewowcompanion/
+├── di/                    → Inyección de dependencias manual
+├── domain/model/          → Modelos de dominio
+├── data/
+│   ├── remote/            → API Retrofit + DTOs
+│   ├── local/             → Room (entities, DAOs, database)
+│   ├── mapper/            → Conversión entre capas
+│   └── repository/        → Repositorios con lógica de datos
+└── ui/
+    ├── common/            → Componentes reutilizables
+    ├── navigation/        → Rutas y barra de navegación
+    ├── screens/           → Pantallas (Home, Zones, Quests, NPCs, Search, Favorites, Settings)
+    └── theme/             → Colores, tipografía y tema
 ```
 
-Para build Android completo (requiere acceso normal a repositorios de Android/Google):
+## Pantallas
+
+- **Home** — Dashboard con acceso a las secciones principales
+- **Zonas** — Listado y detalle de zonas del juego
+- **Quests** — Listado y detalle de misiones
+- **NPCs** — Listado y detalle de personajes no jugables
+- **Búsqueda** — Búsqueda global con historial local
+- **Favoritos** — Elementos guardados por el usuario
+- **Ajustes** — Preferencias de tema y configuración
+
+## Backend
+
+La app se conecta a un backend Spring Boot propio. Endpoints:
+
+- `GET /api/zones` · `GET /api/zones/{id}`
+- `GET /api/quests` · `GET /api/quests/{id}`
+- `GET /api/npcs` · `GET /api/npcs/{id}`
+- `GET /api/search?q={term}`
+
+## Build
 
 ```bash
 ./gradlew :app:assembleDebug
 ```
 
-## 🏗️ Estructura del proyecto
+## Tests
 
-```text
-com/example/turtlewowcompanion
-│
-├─ data/
-│  ├─ local/        → Room (DB, DAO, Entity)
-│  ├─ remote/       → Retrofit API client
-│  └─ GuideRepository.kt
-├─ ui/
-│  └─ GuideViewModel.kt
-└─ MainActivity.kt  → UI Compose principal
+```bash
+./gradlew :app:testDebugUnitTest
+./gradlew :core:test
+```
+
+## Requisitos
+
+- Android Studio 2024+
+- JDK 17+
+- SDK Android API 35
+- Backend Spring Boot corriendo en localhost:8084
