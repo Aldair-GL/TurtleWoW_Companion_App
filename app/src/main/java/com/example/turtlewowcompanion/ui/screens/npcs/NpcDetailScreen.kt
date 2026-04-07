@@ -12,8 +12,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -35,9 +33,19 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.turtlewowcompanion.di.AppContainer
 import com.example.turtlewowcompanion.domain.model.FavoriteType
+import com.example.turtlewowcompanion.ui.common.DetailRow
 import com.example.turtlewowcompanion.ui.common.ErrorScreen
-import com.example.turtlewowcompanion.ui.common.LoadingScreen
+import com.example.turtlewowcompanion.ui.common.FactionBadge
+import com.example.turtlewowcompanion.ui.common.GlassCard
+import com.example.turtlewowcompanion.ui.common.HeroHeader
+import com.example.turtlewowcompanion.ui.common.ImageMapper
+import com.example.turtlewowcompanion.ui.common.ShimmerLoadingScreen
 import com.example.turtlewowcompanion.ui.common.UiState
+import com.example.turtlewowcompanion.ui.common.WowDivider
+import com.example.turtlewowcompanion.ui.theme.DarkBackground
+import com.example.turtlewowcompanion.ui.theme.GlassSurface
+import com.example.turtlewowcompanion.ui.theme.FactionThemeProvider
+import com.example.turtlewowcompanion.ui.theme.LocalFactionColors
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -87,14 +95,15 @@ fun NpcDetailScreen(
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.surface,
+                    containerColor = GlassSurface.copy(alpha = 0.9f),
                     titleContentColor = MaterialTheme.colorScheme.primary
                 )
             )
-        }
+        },
+        containerColor = DarkBackground
     ) { padding ->
         when (val s = state) {
-            is UiState.Loading -> LoadingScreen(Modifier.padding(padding))
+            is UiState.Loading -> ShimmerLoadingScreen(Modifier.padding(padding))
             is UiState.Error -> ErrorScreen(
                 message = s.message,
                 onRetry = { viewModel.loadNpcById(npcId) },
@@ -102,38 +111,48 @@ fun NpcDetailScreen(
             )
             is UiState.Success -> {
                 val npc = s.data
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(padding)
-                        .padding(16.dp)
-                        .verticalScroll(rememberScrollState())
-                ) {
-                    Text(
-                        text = npc.name,
-                        style = MaterialTheme.typography.headlineLarge,
-                        color = MaterialTheme.colorScheme.primary
-                    )
-                    if (npc.title.isNotBlank()) {
-                        Text(
-                            text = "<${npc.title}>",
-                            style = MaterialTheme.typography.titleSmall,
-                            color = MaterialTheme.colorScheme.secondary
-                        )
-                    }
-                    Spacer(modifier = Modifier.height(8.dp))
-
-                    Card(
-                        colors = CardDefaults.cardColors(
-                            containerColor = MaterialTheme.colorScheme.surfaceVariant
-                        ),
-                        modifier = Modifier.fillMaxWidth()
+                FactionThemeProvider(faction = npc.faction) {
+                    val factionColors = LocalFactionColors.current
+                    Column(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(padding)
+                            .verticalScroll(rememberScrollState())
                     ) {
-                        Column(Modifier.padding(16.dp)) {
-                            DetailRow("Tipo", npc.type)
-                            DetailRow("Nivel", "${npc.level}")
-                            DetailRow("Zona", npc.zone)
-                            DetailRow("Facción", npc.faction)
+                        HeroHeader(
+                            title = npc.name,
+                            subtitle = if (npc.title.isNotBlank()) "<${npc.title}>" else npc.type,
+                            backgroundBrush = ImageMapper.npcBrush(npc.type),
+                            height = 180.dp
+                        )
+
+                        Column(modifier = Modifier.padding(16.dp)) {
+                            FactionBadge(faction = npc.faction)
+
+                            Spacer(modifier = Modifier.height(12.dp))
+
+                            GlassCard(
+                                modifier = Modifier.fillMaxWidth(),
+                                accentColor = factionColors.primary
+                            ) {
+                                Column(Modifier.padding(16.dp)) {
+                                    DetailRow("Tipo", npc.type)
+                                    DetailRow("Nivel", "${npc.level}")
+                                    DetailRow("Zona", npc.zone)
+                                    DetailRow("Facción", npc.faction)
+                                }
+                            }
+
+                            if (npc.title.isNotBlank()) {
+                                Spacer(modifier = Modifier.height(16.dp))
+                                WowDivider(color = factionColors.accent)
+                                Spacer(modifier = Modifier.height(16.dp))
+                                Text(
+                                    text = npc.title,
+                                    style = MaterialTheme.typography.titleSmall,
+                                    color = MaterialTheme.colorScheme.secondary
+                                )
+                            }
                         }
                     }
                 }
@@ -141,22 +160,4 @@ fun NpcDetailScreen(
         }
     }
 }
-
-@Composable
-private fun DetailRow(label: String, value: String) {
-    Column(Modifier.padding(vertical = 4.dp)) {
-        Text(
-            text = label,
-            style = MaterialTheme.typography.labelSmall,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
-        )
-        Text(
-            text = value,
-            style = MaterialTheme.typography.bodyLarge,
-            color = MaterialTheme.colorScheme.onSurface
-        )
-    }
-}
-
-
 

@@ -20,6 +20,7 @@ import com.example.turtlewowcompanion.ui.navigation.NavGraph
 import com.example.turtlewowcompanion.ui.navigation.Screen
 import com.example.turtlewowcompanion.ui.navigation.bottomNavItems
 import com.example.turtlewowcompanion.ui.screens.settings.SettingsViewModel
+import com.example.turtlewowcompanion.ui.theme.DarkBackground
 import com.example.turtlewowcompanion.ui.theme.TurtleWoWCompanionTheme
 
 class MainActivity : ComponentActivity() {
@@ -54,6 +55,7 @@ private fun MainApp(container: AppContainer) {
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
+        containerColor = DarkBackground,
         bottomBar = {
             if (showBottomBar) {
                 BottomNavBar(

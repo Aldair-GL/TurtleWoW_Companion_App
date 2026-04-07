@@ -7,8 +7,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -25,6 +23,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.turtlewowcompanion.di.AppContainer
+import com.example.turtlewowcompanion.ui.common.GlassCard
+import com.example.turtlewowcompanion.ui.common.WowDivider
+import com.example.turtlewowcompanion.ui.theme.DarkBackground
+import com.example.turtlewowcompanion.ui.theme.GlassSurface
+import com.example.turtlewowcompanion.ui.theme.WowGold
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -39,11 +42,12 @@ fun SettingsScreen(
             TopAppBar(
                 title = { Text("Ajustes", style = MaterialTheme.typography.titleLarge) },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.surface,
+                    containerColor = GlassSurface.copy(alpha = 0.9f),
                     titleContentColor = MaterialTheme.colorScheme.primary
                 )
             )
-        }
+        },
+        containerColor = DarkBackground
     ) { padding ->
         Column(
             modifier = Modifier
@@ -51,12 +55,9 @@ fun SettingsScreen(
                 .padding(padding)
                 .padding(16.dp)
         ) {
-            // Tema
-            Card(
-                colors = CardDefaults.cardColors(
-                    containerColor = MaterialTheme.colorScheme.surfaceVariant
-                ),
-                modifier = Modifier.fillMaxWidth()
+            GlassCard(
+                modifier = Modifier.fillMaxWidth(),
+                accentColor = WowGold
             ) {
                 Row(
                     modifier = Modifier
@@ -80,27 +81,26 @@ fun SettingsScreen(
                         checked = isDark,
                         onCheckedChange = { viewModel.toggleDarkTheme(it) },
                         colors = SwitchDefaults.colors(
-                            checkedThumbColor = MaterialTheme.colorScheme.primary,
-                            checkedTrackColor = MaterialTheme.colorScheme.primaryContainer
+                            checkedThumbColor = WowGold,
+                            checkedTrackColor = WowGold.copy(alpha = 0.3f)
                         )
                     )
                 }
             }
 
             Spacer(modifier = Modifier.height(24.dp))
+            WowDivider()
+            Spacer(modifier = Modifier.height(24.dp))
 
-            // Info de la app
-            Card(
-                colors = CardDefaults.cardColors(
-                    containerColor = MaterialTheme.colorScheme.surfaceVariant
-                ),
-                modifier = Modifier.fillMaxWidth()
+            GlassCard(
+                modifier = Modifier.fillMaxWidth(),
+                accentColor = WowGold
             ) {
                 Column(Modifier.padding(16.dp)) {
                     Text(
                         "Acerca de",
                         style = MaterialTheme.typography.titleMedium,
-                        color = MaterialTheme.colorScheme.primary
+                        color = WowGold
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(
@@ -124,4 +124,3 @@ fun SettingsScreen(
         }
     }
 }
-

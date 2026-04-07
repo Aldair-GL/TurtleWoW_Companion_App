@@ -24,9 +24,14 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.turtlewowcompanion.di.AppContainer
 import com.example.turtlewowcompanion.ui.common.ErrorScreen
-import com.example.turtlewowcompanion.ui.common.LoadingScreen
+import com.example.turtlewowcompanion.ui.common.HeroHeader
+import com.example.turtlewowcompanion.ui.common.ImageMapper
+import com.example.turtlewowcompanion.ui.common.ShimmerLoadingScreen
+import com.example.turtlewowcompanion.ui.common.ThemeBrushes
 import com.example.turtlewowcompanion.ui.common.UiState
-import com.example.turtlewowcompanion.ui.common.WowCard
+import com.example.turtlewowcompanion.ui.common.WowCardEnhanced
+import com.example.turtlewowcompanion.ui.theme.DarkBackground
+import com.example.turtlewowcompanion.ui.theme.GlassSurface
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -41,21 +46,22 @@ fun NpcListScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("NPCs", style = MaterialTheme.typography.titleLarge) },
+                title = { Text("Personajes", style = MaterialTheme.typography.titleLarge) },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Volver")
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.surface,
+                    containerColor = GlassSurface.copy(alpha = 0.9f),
                     titleContentColor = MaterialTheme.colorScheme.primary
                 )
             )
-        }
+        },
+        containerColor = DarkBackground
     ) { padding ->
         when (val s = state) {
-            is UiState.Loading -> LoadingScreen(Modifier.padding(padding))
+            is UiState.Loading -> ShimmerLoadingScreen(Modifier.padding(padding))
             is UiState.Error -> ErrorScreen(
                 message = s.message,
                 onRetry = { viewModel.loadNpcs() },
@@ -65,12 +71,23 @@ fun NpcListScreen(
                 LazyColumn(
                     modifier = Modifier.fillMaxSize().padding(padding),
                     contentPadding = PaddingValues(16.dp),
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                    verticalArrangement = Arrangement.spacedBy(10.dp)
                 ) {
+                    item {
+                        HeroHeader(
+                            title = "Personajes",
+                            subtitle = "${s.data.size} NPCs registrados",
+                            backgroundBrush = ThemeBrushes.npcs,
+                            height = 140.dp
+                        )
+                    }
                     items(s.data, key = { it.id }) { npc ->
-                        WowCard(
+                        WowCardEnhanced(
                             title = npc.name,
                             subtitle = "${npc.type} · Nivel ${npc.level} · ${npc.zone}",
+                            backgroundBrush = ImageMapper.npcBrush(npc.type),
+                            faction = npc.faction,
+                            badge = npc.faction,
                             onClick = { onNpcClick(npc.id) }
                         )
                     }
@@ -79,6 +96,5 @@ fun NpcListScreen(
         }
     }
 }
-
 
 

@@ -13,9 +13,9 @@ Aplicación móvil que permite consultar información sobre zonas, quests, NPCs 
 - **Room** para persistencia local (caché de datos, favoritos, historial de búsqueda)
 - **DataStore Preferences** para ajustes de usuario (tema, configuración)
 - **Retrofit 2** + OkHttp para consumo de API REST
-- **Navigation Compose** para navegación entre pantallas
+- **Navigation Compose** para navegación entre pantallas con transiciones animadas
 - **Coil** para carga de imágenes
-- **Material 3** con tema personalizado inspirado en WoW
+- **Material 3** con tema personalizado inspirado en WoW (glassmorphism, paleta de facciones)
 
 ## Estructura del proyecto
 
@@ -29,21 +29,32 @@ com.example.turtlewowcompanion/
 │   ├── mapper/            → Conversión entre capas
 │   └── repository/        → Repositorios con lógica de datos
 └── ui/
-    ├── common/            → Componentes reutilizables
+    ├── common/            → Componentes reutilizables (GlassCard, WowCardEnhanced, HeroHeader, etc.)
     ├── navigation/        → Rutas y barra de navegación
     ├── screens/           → Pantallas (Home, Zones, Quests, NPCs, Search, Favorites, Settings)
-    └── theme/             → Colores, tipografía y tema
+    └── theme/             → Colores, tipografía, tema y facciones
 ```
 
 ## Pantallas
 
-- **Home** — Dashboard con acceso a las secciones principales
-- **Zonas** — Listado y detalle de zonas del juego
-- **Quests** — Listado y detalle de misiones
+- **Home** — Dashboard con hero banner y acceso visual a categorías
+- **Zonas** — Listado y detalle de zonas del juego con tematización por facción
+- **Quests** — Listado y detalle de misiones con badges de facción
 - **NPCs** — Listado y detalle de personajes no jugables
 - **Búsqueda** — Búsqueda global con historial local
 - **Favoritos** — Elementos guardados por el usuario
 - **Ajustes** — Preferencias de tema y configuración
+
+## Diseño visual
+
+La interfaz aplica una estética inspirada en World of Warcraft:
+- Paleta dorada, oscura y de pergamino
+- Tarjetas con efecto glassmorphism (semi-transparencia + bordes sutiles)
+- Distinción visual por facción (Horda en rojo, Alianza en azul, Neutral en dorado)
+- Cabeceras tipo hero con fondos temáticos y gradientes
+- Separadores ornamentales estilizados
+- Animaciones de shimmer durante la carga
+- Transiciones de navegación fluidas
 
 ## Backend
 

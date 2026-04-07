@@ -24,9 +24,14 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.turtlewowcompanion.di.AppContainer
 import com.example.turtlewowcompanion.ui.common.ErrorScreen
-import com.example.turtlewowcompanion.ui.common.LoadingScreen
+import com.example.turtlewowcompanion.ui.common.HeroHeader
+import com.example.turtlewowcompanion.ui.common.ImageMapper
+import com.example.turtlewowcompanion.ui.common.ShimmerLoadingScreen
+import com.example.turtlewowcompanion.ui.common.ThemeBrushes
 import com.example.turtlewowcompanion.ui.common.UiState
-import com.example.turtlewowcompanion.ui.common.WowCard
+import com.example.turtlewowcompanion.ui.common.WowCardEnhanced
+import com.example.turtlewowcompanion.ui.theme.DarkBackground
+import com.example.turtlewowcompanion.ui.theme.GlassSurface
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -41,21 +46,22 @@ fun QuestListScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Quests", style = MaterialTheme.typography.titleLarge) },
+                title = { Text("Misiones", style = MaterialTheme.typography.titleLarge) },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Volver")
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.surface,
+                    containerColor = GlassSurface.copy(alpha = 0.9f),
                     titleContentColor = MaterialTheme.colorScheme.primary
                 )
             )
-        }
+        },
+        containerColor = DarkBackground
     ) { padding ->
         when (val s = state) {
-            is UiState.Loading -> LoadingScreen(Modifier.padding(padding))
+            is UiState.Loading -> ShimmerLoadingScreen(Modifier.padding(padding))
             is UiState.Error -> ErrorScreen(
                 message = s.message,
                 onRetry = { viewModel.loadQuests() },
@@ -65,12 +71,23 @@ fun QuestListScreen(
                 LazyColumn(
                     modifier = Modifier.fillMaxSize().padding(padding),
                     contentPadding = PaddingValues(16.dp),
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                    verticalArrangement = Arrangement.spacedBy(10.dp)
                 ) {
+                    item {
+                        HeroHeader(
+                            title = "Misiones",
+                            subtitle = "${s.data.size} aventuras disponibles",
+                            backgroundBrush = ThemeBrushes.quests,
+                            height = 140.dp
+                        )
+                    }
                     items(s.data, key = { it.id }) { quest ->
-                        WowCard(
+                        WowCardEnhanced(
                             title = quest.title,
-                            subtitle = "Nivel ${quest.level} · ${quest.zone} · ${quest.faction}",
+                            subtitle = "Nivel ${quest.level} · ${quest.zone}",
+                            backgroundBrush = ImageMapper.questBrush(quest.zone),
+                            faction = quest.faction,
+                            badge = quest.faction,
                             onClick = { onQuestClick(quest.id) }
                         )
                     }
@@ -79,6 +96,5 @@ fun QuestListScreen(
         }
     }
 }
-
 
 

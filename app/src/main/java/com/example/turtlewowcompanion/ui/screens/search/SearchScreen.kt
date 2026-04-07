@@ -19,6 +19,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.History
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.SearchOff
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -39,10 +40,14 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.turtlewowcompanion.di.AppContainer
+import com.example.turtlewowcompanion.ui.common.EmptyStateScreen
 import com.example.turtlewowcompanion.ui.common.ErrorScreen
-import com.example.turtlewowcompanion.ui.common.LoadingScreen
+import com.example.turtlewowcompanion.ui.common.ShimmerLoadingScreen
 import com.example.turtlewowcompanion.ui.common.UiState
-import com.example.turtlewowcompanion.ui.common.WowCard
+import com.example.turtlewowcompanion.ui.common.WowCardEnhanced
+import com.example.turtlewowcompanion.ui.theme.DarkBackground
+import com.example.turtlewowcompanion.ui.theme.GlassSurface
+import com.example.turtlewowcompanion.ui.theme.WowGold
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -60,11 +65,12 @@ fun SearchScreen(
             TopAppBar(
                 title = { Text("Buscar", style = MaterialTheme.typography.titleLarge) },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.surface,
+                    containerColor = GlassSurface.copy(alpha = 0.9f),
                     titleContentColor = MaterialTheme.colorScheme.primary
                 )
             )
-        }
+        },
+        containerColor = DarkBackground
     ) { padding ->
         Column(
             modifier = Modifier
@@ -72,11 +78,12 @@ fun SearchScreen(
                 .padding(padding)
                 .padding(horizontal = 16.dp)
         ) {
+            Spacer(modifier = Modifier.height(8.dp))
             OutlinedTextField(
                 value = query,
                 onValueChange = viewModel::onQueryChange,
                 placeholder = { Text("Buscar zonas, quests, NPCs...") },
-                leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
+                leadingIcon = { Icon(Icons.Default.Search, contentDescription = null, tint = WowGold) },
                 trailingIcon = {
                     if (query.isNotEmpty()) {
                         IconButton(onClick = { viewModel.onQueryChange("") }) {
@@ -88,8 +95,11 @@ fun SearchScreen(
                 keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
                 keyboardActions = KeyboardActions(onSearch = { viewModel.search() }),
                 colors = OutlinedTextFieldDefaults.colors(
-                    focusedBorderColor = MaterialTheme.colorScheme.primary,
-                    cursorColor = MaterialTheme.colorScheme.primary
+                    focusedBorderColor = WowGold,
+                    unfocusedBorderColor = GlassSurface,
+                    cursorColor = WowGold,
+                    focusedContainerColor = GlassSurface.copy(alpha = 0.5f),
+                    unfocusedContainerColor = GlassSurface.copy(alpha = 0.3f)
                 ),
                 modifier = Modifier.fillMaxWidth()
             )
@@ -108,10 +118,10 @@ fun SearchScreen(
                             Text(
                                 "Búsquedas recientes",
                                 style = MaterialTheme.typography.titleSmall,
-                                color = MaterialTheme.colorScheme.primary
+                                color = WowGold
                             )
                             TextButton(onClick = { viewModel.clearHistory() }) {
-                                Text("Limpiar")
+                                Text("Limpiar", color = MaterialTheme.colorScheme.onSurfaceVariant)
                             }
                         }
                         history.forEach { term ->
@@ -122,7 +132,7 @@ fun SearchScreen(
                                         viewModel.onQueryChange(term)
                                         viewModel.search()
                                     }
-                                    .padding(vertical = 8.dp),
+                                    .padding(vertical = 10.dp),
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
                                 Icon(
@@ -140,28 +150,28 @@ fun SearchScreen(
                         }
                     }
                 }
-                is UiState.Loading -> LoadingScreen()
+                is UiState.Loading -> ShimmerLoadingScreen()
                 is UiState.Error -> ErrorScreen(
                     message = s.message,
                     onRetry = { viewModel.search() }
                 )
                 is UiState.Success -> {
                     if (s.data.isEmpty()) {
-                        Text(
-                            "No se encontraron resultados",
-                            style = MaterialTheme.typography.bodyLarge,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant,
-                            modifier = Modifier.padding(top = 24.dp)
+                        EmptyStateScreen(
+                            icon = Icons.Default.SearchOff,
+                            title = "Sin resultados",
+                            subtitle = "No se encontraron coincidencias para \"$query\""
                         )
                     } else {
                         LazyColumn(
                             contentPadding = PaddingValues(vertical = 8.dp),
-                            verticalArrangement = Arrangement.spacedBy(8.dp)
+                            verticalArrangement = Arrangement.spacedBy(10.dp)
                         ) {
                             items(s.data, key = { "${it.type}-${it.id}" }) { result ->
-                                WowCard(
+                                WowCardEnhanced(
                                     title = result.name,
                                     subtitle = "${result.type.uppercase()} · ${result.description}",
+                                    faction = result.type,
                                     onClick = { onResultClick(result.type, result.id) }
                                 )
                             }

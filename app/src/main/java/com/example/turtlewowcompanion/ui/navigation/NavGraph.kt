@@ -1,5 +1,9 @@
 package com.example.turtlewowcompanion.ui.navigation
 
+import androidx.compose.animation.AnimatedContentTransitionScope
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -18,14 +22,25 @@ import com.example.turtlewowcompanion.ui.screens.settings.SettingsScreen
 import com.example.turtlewowcompanion.ui.screens.zones.ZoneDetailScreen
 import com.example.turtlewowcompanion.ui.screens.zones.ZoneListScreen
 
+private const val ANIM_DURATION = 350
+
 @Composable
 fun NavGraph(
     navController: NavHostController,
     container: AppContainer
 ) {
-    NavHost(navController = navController, startDestination = Screen.Home.route) {
+    NavHost(
+        navController = navController,
+        startDestination = Screen.Home.route,
+        enterTransition = { fadeIn(animationSpec = tween(ANIM_DURATION)) },
+        exitTransition = { fadeOut(animationSpec = tween(ANIM_DURATION)) }
+    ) {
 
-        composable(Screen.Home.route) {
+        composable(
+            route = Screen.Home.route,
+            enterTransition = { fadeIn(tween(ANIM_DURATION)) },
+            exitTransition = { fadeOut(tween(ANIM_DURATION)) }
+        ) {
             HomeScreen(
                 onNavigateToZones = { navController.navigate(Screen.ZoneList.route) },
                 onNavigateToQuests = { navController.navigate(Screen.QuestList.route) },
@@ -34,7 +49,13 @@ fun NavGraph(
         }
 
         // Zones
-        composable(Screen.ZoneList.route) {
+        composable(
+            route = Screen.ZoneList.route,
+            enterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Left, tween(ANIM_DURATION)) },
+            exitTransition = { fadeOut(tween(ANIM_DURATION)) },
+            popEnterTransition = { fadeIn(tween(ANIM_DURATION)) },
+            popExitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Right, tween(ANIM_DURATION)) }
+        ) {
             ZoneListScreen(
                 container = container,
                 onZoneClick = { id -> navController.navigate(Screen.ZoneDetail.createRoute(id)) },
@@ -43,7 +64,9 @@ fun NavGraph(
         }
         composable(
             route = Screen.ZoneDetail.route,
-            arguments = listOf(navArgument("id") { type = NavType.LongType })
+            arguments = listOf(navArgument("id") { type = NavType.LongType }),
+            enterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Left, tween(ANIM_DURATION)) },
+            popExitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Right, tween(ANIM_DURATION)) }
         ) { backStackEntry ->
             val id = backStackEntry.arguments?.getLong("id") ?: return@composable
             ZoneDetailScreen(
@@ -54,7 +77,13 @@ fun NavGraph(
         }
 
         // Quests
-        composable(Screen.QuestList.route) {
+        composable(
+            route = Screen.QuestList.route,
+            enterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Left, tween(ANIM_DURATION)) },
+            exitTransition = { fadeOut(tween(ANIM_DURATION)) },
+            popEnterTransition = { fadeIn(tween(ANIM_DURATION)) },
+            popExitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Right, tween(ANIM_DURATION)) }
+        ) {
             QuestListScreen(
                 container = container,
                 onQuestClick = { id -> navController.navigate(Screen.QuestDetail.createRoute(id)) },
@@ -63,7 +92,9 @@ fun NavGraph(
         }
         composable(
             route = Screen.QuestDetail.route,
-            arguments = listOf(navArgument("id") { type = NavType.LongType })
+            arguments = listOf(navArgument("id") { type = NavType.LongType }),
+            enterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Left, tween(ANIM_DURATION)) },
+            popExitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Right, tween(ANIM_DURATION)) }
         ) { backStackEntry ->
             val id = backStackEntry.arguments?.getLong("id") ?: return@composable
             QuestDetailScreen(
@@ -74,7 +105,13 @@ fun NavGraph(
         }
 
         // NPCs
-        composable(Screen.NpcList.route) {
+        composable(
+            route = Screen.NpcList.route,
+            enterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Left, tween(ANIM_DURATION)) },
+            exitTransition = { fadeOut(tween(ANIM_DURATION)) },
+            popEnterTransition = { fadeIn(tween(ANIM_DURATION)) },
+            popExitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Right, tween(ANIM_DURATION)) }
+        ) {
             NpcListScreen(
                 container = container,
                 onNpcClick = { id -> navController.navigate(Screen.NpcDetail.createRoute(id)) },
@@ -83,7 +120,9 @@ fun NavGraph(
         }
         composable(
             route = Screen.NpcDetail.route,
-            arguments = listOf(navArgument("id") { type = NavType.LongType })
+            arguments = listOf(navArgument("id") { type = NavType.LongType }),
+            enterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Left, tween(ANIM_DURATION)) },
+            popExitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Right, tween(ANIM_DURATION)) }
         ) { backStackEntry ->
             val id = backStackEntry.arguments?.getLong("id") ?: return@composable
             NpcDetailScreen(
@@ -94,7 +133,11 @@ fun NavGraph(
         }
 
         // Search
-        composable(Screen.Search.route) {
+        composable(
+            route = Screen.Search.route,
+            enterTransition = { fadeIn(tween(ANIM_DURATION)) },
+            exitTransition = { fadeOut(tween(ANIM_DURATION)) }
+        ) {
             SearchScreen(
                 container = container,
                 onResultClick = { type, id ->
@@ -108,7 +151,11 @@ fun NavGraph(
         }
 
         // Favorites
-        composable(Screen.Favorites.route) {
+        composable(
+            route = Screen.Favorites.route,
+            enterTransition = { fadeIn(tween(ANIM_DURATION)) },
+            exitTransition = { fadeOut(tween(ANIM_DURATION)) }
+        ) {
             FavoritesScreen(
                 container = container,
                 onItemClick = { type, refId ->
@@ -122,7 +169,11 @@ fun NavGraph(
         }
 
         // Settings
-        composable(Screen.Settings.route) {
+        composable(
+            route = Screen.Settings.route,
+            enterTransition = { fadeIn(tween(ANIM_DURATION)) },
+            exitTransition = { fadeOut(tween(ANIM_DURATION)) }
+        ) {
             SettingsScreen(container = container)
         }
     }

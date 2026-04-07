@@ -1,6 +1,8 @@
 package com.example.turtlewowcompanion.ui.screens.zones
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -24,9 +26,14 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.turtlewowcompanion.di.AppContainer
 import com.example.turtlewowcompanion.ui.common.ErrorScreen
-import com.example.turtlewowcompanion.ui.common.LoadingScreen
+import com.example.turtlewowcompanion.ui.common.HeroHeader
+import com.example.turtlewowcompanion.ui.common.ImageMapper
+import com.example.turtlewowcompanion.ui.common.ShimmerLoadingScreen
+import com.example.turtlewowcompanion.ui.common.ThemeBrushes
 import com.example.turtlewowcompanion.ui.common.UiState
-import com.example.turtlewowcompanion.ui.common.WowCard
+import com.example.turtlewowcompanion.ui.common.WowCardEnhanced
+import com.example.turtlewowcompanion.ui.theme.DarkBackground
+import com.example.turtlewowcompanion.ui.theme.GlassSurface
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -48,14 +55,15 @@ fun ZoneListScreen(
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.surface,
+                    containerColor = GlassSurface.copy(alpha = 0.9f),
                     titleContentColor = MaterialTheme.colorScheme.primary
                 )
             )
-        }
+        },
+        containerColor = DarkBackground
     ) { padding ->
         when (val s = state) {
-            is UiState.Loading -> LoadingScreen(Modifier.padding(padding))
+            is UiState.Loading -> ShimmerLoadingScreen(Modifier.padding(padding))
             is UiState.Error -> ErrorScreen(
                 message = s.message,
                 onRetry = { viewModel.loadZones() },
@@ -67,12 +75,22 @@ fun ZoneListScreen(
                         .fillMaxSize()
                         .padding(padding),
                     contentPadding = PaddingValues(16.dp),
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                    verticalArrangement = Arrangement.spacedBy(10.dp)
                 ) {
+                    item {
+                        HeroHeader(
+                            title = "Zonas de Azeroth",
+                            subtitle = "${s.data.size} regiones por explorar",
+                            backgroundBrush = ThemeBrushes.zones,
+                            height = 140.dp
+                        )
+                    }
                     items(s.data, key = { it.id }) { zone ->
-                        WowCard(
+                        WowCardEnhanced(
                             title = zone.name,
                             subtitle = "Nivel ${zone.level} · ${zone.faction}",
+                            backgroundBrush = ImageMapper.zoneBrush(zone.name),
+                            faction = zone.faction,
                             onClick = { onZoneClick(zone.id) }
                         )
                     }
@@ -81,6 +99,3 @@ fun ZoneListScreen(
         }
     }
 }
-
-
-
