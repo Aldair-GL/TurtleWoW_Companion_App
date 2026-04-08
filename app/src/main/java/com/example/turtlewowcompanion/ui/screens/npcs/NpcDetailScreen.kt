@@ -31,6 +31,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.turtlewowcompanion.R
 import com.example.turtlewowcompanion.di.AppContainer
 import com.example.turtlewowcompanion.domain.model.FavoriteType
 import com.example.turtlewowcompanion.ui.common.DetailRow
@@ -123,6 +124,7 @@ fun NpcDetailScreen(
                             title = npc.name,
                             subtitle = if (npc.title.isNotBlank()) "<${npc.title}>" else npc.type,
                             backgroundBrush = ImageMapper.npcBrush(npc.type),
+                            imageRes = ImageMapper.npcImageRes(npc.name, npc.type) ?: R.drawable.img_hero_npcs,
                             height = 180.dp
                         )
 
@@ -160,4 +162,6 @@ fun NpcDetailScreen(
         }
     }
 }
+
+
 

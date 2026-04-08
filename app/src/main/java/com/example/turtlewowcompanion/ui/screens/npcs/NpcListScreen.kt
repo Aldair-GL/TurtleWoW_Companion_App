@@ -22,6 +22,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.turtlewowcompanion.R
 import com.example.turtlewowcompanion.di.AppContainer
 import com.example.turtlewowcompanion.ui.common.ErrorScreen
 import com.example.turtlewowcompanion.ui.common.HeroHeader
@@ -78,6 +79,7 @@ fun NpcListScreen(
                             title = "Personajes",
                             subtitle = "${s.data.size} NPCs registrados",
                             backgroundBrush = ThemeBrushes.npcs,
+                            imageRes = R.drawable.img_hero_npcs,
                             height = 140.dp
                         )
                     }
@@ -86,6 +88,7 @@ fun NpcListScreen(
                             title = npc.name,
                             subtitle = "${npc.type} · Nivel ${npc.level} · ${npc.zone}",
                             backgroundBrush = ImageMapper.npcBrush(npc.type),
+                            imageRes = ImageMapper.npcImageRes(npc.name, npc.type),
                             faction = npc.faction,
                             badge = npc.faction,
                             onClick = { onNpcClick(npc.id) }
@@ -96,5 +99,4 @@ fun NpcListScreen(
         }
     }
 }
-
 

@@ -1,8 +1,6 @@
 package com.example.turtlewowcompanion.ui.screens.zones
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -24,6 +22,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.turtlewowcompanion.R
 import com.example.turtlewowcompanion.di.AppContainer
 import com.example.turtlewowcompanion.ui.common.ErrorScreen
 import com.example.turtlewowcompanion.ui.common.HeroHeader
@@ -71,9 +70,7 @@ fun ZoneListScreen(
             )
             is UiState.Success -> {
                 LazyColumn(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(padding),
+                    modifier = Modifier.fillMaxSize().padding(padding),
                     contentPadding = PaddingValues(16.dp),
                     verticalArrangement = Arrangement.spacedBy(10.dp)
                 ) {
@@ -82,6 +79,7 @@ fun ZoneListScreen(
                             title = "Zonas de Azeroth",
                             subtitle = "${s.data.size} regiones por explorar",
                             backgroundBrush = ThemeBrushes.zones,
+                            imageRes = R.drawable.img_hero_zones,
                             height = 140.dp
                         )
                     }
@@ -90,6 +88,7 @@ fun ZoneListScreen(
                             title = zone.name,
                             subtitle = "Nivel ${zone.level} · ${zone.faction}",
                             backgroundBrush = ImageMapper.zoneBrush(zone.name),
+                            imageRes = ImageMapper.zoneImageRes(zone.name),
                             faction = zone.faction,
                             onClick = { onZoneClick(zone.id) }
                         )
@@ -99,3 +98,4 @@ fun ZoneListScreen(
         }
     }
 }
+

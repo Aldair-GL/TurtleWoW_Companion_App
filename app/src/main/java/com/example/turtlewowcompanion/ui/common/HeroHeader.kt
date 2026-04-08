@@ -1,5 +1,6 @@
 package com.example.turtlewowcompanion.ui.common
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -13,6 +14,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -26,6 +29,7 @@ fun HeroHeader(
     modifier: Modifier = Modifier,
     subtitle: String? = null,
     backgroundBrush: Brush = ThemeBrushes.defaultBg,
+    imageRes: Int? = null,
     height: Dp = 220.dp
 ) {
     Box(
@@ -34,6 +38,15 @@ fun HeroHeader(
             .height(height)
             .background(backgroundBrush)
     ) {
+        if (imageRes != null) {
+            Image(
+                painter = painterResource(imageRes),
+                contentDescription = null,
+                contentScale = ContentScale.Crop,
+                modifier = Modifier.matchParentSize()
+            )
+        }
+
         // Gradiente oscuro inferior para legibilidad del texto
         Box(
             modifier = Modifier

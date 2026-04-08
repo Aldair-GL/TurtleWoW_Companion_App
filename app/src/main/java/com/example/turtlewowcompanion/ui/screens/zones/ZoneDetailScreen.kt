@@ -31,6 +31,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.turtlewowcompanion.R
 import com.example.turtlewowcompanion.di.AppContainer
 import com.example.turtlewowcompanion.domain.model.FavoriteType
 import com.example.turtlewowcompanion.ui.common.DetailRow
@@ -123,6 +124,7 @@ fun ZoneDetailScreen(
                             title = zone.name,
                             subtitle = "Nivel ${zone.level}",
                             backgroundBrush = ImageMapper.zoneBrush(zone.name),
+                            imageRes = ImageMapper.zoneImageRes(zone.name) ?: R.drawable.img_hero_zones,
                             height = 180.dp
                         )
 
@@ -157,5 +159,6 @@ fun ZoneDetailScreen(
         }
     }
 }
+
 
 

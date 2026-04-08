@@ -1,5 +1,6 @@
 package com.example.turtlewowcompanion.ui.common
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -18,6 +19,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.example.turtlewowcompanion.ui.theme.GradientDark
@@ -30,6 +33,7 @@ fun WowCardEnhanced(
     subtitle: String,
     modifier: Modifier = Modifier,
     backgroundBrush: Brush? = null,
+    imageRes: Int? = null,
     faction: String? = null,
     badge: String? = null,
     onClick: () -> Unit = {}
@@ -46,14 +50,24 @@ fun WowCardEnhanced(
             modifier = Modifier.fillMaxSize(),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            // Thumbnail lateral con brush temático
-            if (backgroundBrush != null) {
+            if (backgroundBrush != null || imageRes != null) {
                 Box(
                     modifier = Modifier
                         .size(88.dp)
                         .clip(RoundedCornerShape(topStart = 16.dp, bottomStart = 16.dp))
-                        .background(backgroundBrush)
+                        .then(
+                            if (backgroundBrush != null) Modifier.background(backgroundBrush)
+                            else Modifier
+                        )
                 ) {
+                    if (imageRes != null) {
+                        Image(
+                            painter = painterResource(imageRes),
+                            contentDescription = null,
+                            contentScale = ContentScale.Crop,
+                            modifier = Modifier.fillMaxSize()
+                        )
+                    }
                     Box(
                         modifier = Modifier
                             .fillMaxSize()

@@ -22,6 +22,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.turtlewowcompanion.R
 import com.example.turtlewowcompanion.di.AppContainer
 import com.example.turtlewowcompanion.ui.common.ErrorScreen
 import com.example.turtlewowcompanion.ui.common.HeroHeader
@@ -78,6 +79,7 @@ fun QuestListScreen(
                             title = "Misiones",
                             subtitle = "${s.data.size} aventuras disponibles",
                             backgroundBrush = ThemeBrushes.quests,
+                            imageRes = R.drawable.img_hero_quests,
                             height = 140.dp
                         )
                     }
@@ -86,6 +88,7 @@ fun QuestListScreen(
                             title = quest.title,
                             subtitle = "Nivel ${quest.level} · ${quest.zone}",
                             backgroundBrush = ImageMapper.questBrush(quest.zone),
+                            imageRes = ImageMapper.questImageRes(quest.zone),
                             faction = quest.faction,
                             badge = quest.faction,
                             onClick = { onQuestClick(quest.id) }
@@ -96,5 +99,6 @@ fun QuestListScreen(
         }
     }
 }
+
 
 

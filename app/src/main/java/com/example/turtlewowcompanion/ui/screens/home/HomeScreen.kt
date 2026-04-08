@@ -1,5 +1,6 @@
 package com.example.turtlewowcompanion.ui.screens.home
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -24,8 +25,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.example.turtlewowcompanion.R
 import com.example.turtlewowcompanion.ui.common.GlassCard
 import com.example.turtlewowcompanion.ui.common.ThemeBrushes
 import com.example.turtlewowcompanion.ui.common.WowDivider
@@ -54,6 +58,12 @@ fun HomeScreen(
                 .height(260.dp)
                 .background(ThemeBrushes.homeHero)
         ) {
+            Image(
+                painter = painterResource(R.drawable.img_hero_home),
+                contentDescription = null,
+                contentScale = ContentScale.Crop,
+                modifier = Modifier.matchParentSize()
+            )
             Box(
                 modifier = Modifier
                     .matchParentSize()
@@ -113,6 +123,7 @@ fun HomeScreen(
                 description = "Explora las tierras de Azeroth",
                 icon = Icons.Default.Explore,
                 backgroundBrush = ThemeBrushes.zones,
+                imageRes = R.drawable.img_cat_zones,
                 onClick = onNavigateToZones
             )
             HomeCategoryCardEnhanced(
@@ -120,6 +131,7 @@ fun HomeScreen(
                 description = "Cadenas de quests y aventuras épicas",
                 icon = Icons.AutoMirrored.Filled.MenuBook,
                 backgroundBrush = ThemeBrushes.quests,
+                imageRes = R.drawable.img_cat_quests,
                 onClick = onNavigateToQuests
             )
             HomeCategoryCardEnhanced(
@@ -127,6 +139,7 @@ fun HomeScreen(
                 description = "NPCs, vendedores y jefes de mazmorra",
                 icon = Icons.Default.People,
                 backgroundBrush = ThemeBrushes.npcs,
+                imageRes = R.drawable.img_cat_npcs,
                 onClick = onNavigateToNpcs
             )
         }
@@ -155,6 +168,7 @@ private fun HomeCategoryCardEnhanced(
     description: String,
     icon: ImageVector,
     backgroundBrush: Brush,
+    imageRes: Int? = null,
     onClick: () -> Unit
 ) {
     GlassCard(
@@ -164,12 +178,21 @@ private fun HomeCategoryCardEnhanced(
         accentColor = WowGold,
         onClick = onClick
     ) {
-        // Fondo temático
+        // Fondo temático con gradiente
         Box(
             modifier = Modifier
                 .matchParentSize()
                 .background(backgroundBrush)
         )
+        if (imageRes != null) {
+            Image(
+                painter = painterResource(imageRes),
+                contentDescription = null,
+                contentScale = ContentScale.Crop,
+                modifier = Modifier.matchParentSize(),
+                alpha = 0.4f
+            )
+        }
         Box(
             modifier = Modifier
                 .matchParentSize()
