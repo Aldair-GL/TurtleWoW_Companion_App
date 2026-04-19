@@ -9,6 +9,17 @@ sealed class Screen(val route: String) {
         fun createRoute(id: Long) = "zones/$id"
     }
 
+    data object RaceList : Screen("races")
+    data object RaceDetail : Screen("races/{id}") {
+        fun createRoute(id: Long) = "races/$id"
+    }
+
+    data object ClassList : Screen("classes")
+    data object ClassDetail : Screen("classes/{id}") {
+        fun createRoute(id: Long) = "classes/$id"
+    }
+
+    // Rutas legacy (mantenidas para favoritos/búsqueda)
     data object QuestList : Screen("quests")
     data object QuestDetail : Screen("quests/{id}") {
         fun createRoute(id: Long) = "quests/$id"
@@ -23,4 +34,3 @@ sealed class Screen(val route: String) {
     data object Favorites : Screen("favorites")
     data object Settings : Screen("settings")
 }
-

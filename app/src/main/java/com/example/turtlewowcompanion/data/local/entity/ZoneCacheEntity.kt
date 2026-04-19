@@ -8,8 +8,10 @@ data class ZoneCacheEntity(
     @PrimaryKey val id: Long,
     val name: String,
     val description: String,
-    val level: String,
-    val faction: String,
-    val imageUrl: String?
+    val minLevel: Int,
+    val maxLevel: Int,
+    val continent: String,
+    val zoneType: String,
+    val factionName: String
 )
 

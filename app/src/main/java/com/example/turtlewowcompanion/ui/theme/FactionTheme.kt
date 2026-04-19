@@ -38,8 +38,10 @@ val LocalFactionColors = staticCompositionLocalOf { NeutralFactionColors }
 
 fun factionColorsFor(faction: String): FactionColors {
     return when {
-        faction.contains("horde", ignoreCase = true) -> HordeFactionColors
-        faction.contains("alliance", ignoreCase = true) -> AllianceFactionColors
+        faction.contains("horde", ignoreCase = true) ||
+        faction.contains("horda", ignoreCase = true) -> HordeFactionColors
+        faction.contains("alliance", ignoreCase = true) ||
+        faction.contains("alianza", ignoreCase = true) -> AllianceFactionColors
         else -> NeutralFactionColors
     }
 }

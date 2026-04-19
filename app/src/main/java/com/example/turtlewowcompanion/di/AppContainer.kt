@@ -7,8 +7,10 @@ import com.example.turtlewowcompanion.data.remote.TurtleWowApi
 import com.example.turtlewowcompanion.data.repository.FavoriteRepository
 import com.example.turtlewowcompanion.data.repository.NpcRepository
 import com.example.turtlewowcompanion.data.repository.QuestRepository
+import com.example.turtlewowcompanion.data.repository.RaceRepository
 import com.example.turtlewowcompanion.data.repository.SearchRepository
 import com.example.turtlewowcompanion.data.repository.SettingsRepository
+import com.example.turtlewowcompanion.data.repository.WowClassRepository
 import com.example.turtlewowcompanion.data.repository.ZoneRepository
 import com.example.turtlewowcompanion.data.repository.dataStore
 
@@ -21,10 +23,11 @@ class AppContainer(context: Context) {
 
     // Repositories
     val zoneRepository: ZoneRepository = ZoneRepository(api, database.zoneDao())
+    val raceRepository: RaceRepository = RaceRepository(api)
+    val classRepository: WowClassRepository = WowClassRepository(api)
     val questRepository: QuestRepository = QuestRepository(api, database.questDao())
     val npcRepository: NpcRepository = NpcRepository(api, database.npcDao())
     val favoriteRepository: FavoriteRepository = FavoriteRepository(database.favoriteDao())
     val searchRepository: SearchRepository = SearchRepository(api, database.searchHistoryDao())
     val settingsRepository: SettingsRepository = SettingsRepository(context.dataStore)
 }
-

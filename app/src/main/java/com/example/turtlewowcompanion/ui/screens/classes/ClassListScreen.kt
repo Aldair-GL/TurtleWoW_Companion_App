@@ -1,4 +1,4 @@
-package com.example.turtlewowcompanion.ui.screens.zones
+package com.example.turtlewowcompanion.ui.screens.classes
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
@@ -26,7 +26,6 @@ import com.example.turtlewowcompanion.R
 import com.example.turtlewowcompanion.di.AppContainer
 import com.example.turtlewowcompanion.ui.common.ErrorScreen
 import com.example.turtlewowcompanion.ui.common.HeroHeader
-import com.example.turtlewowcompanion.ui.common.ImageMapper
 import com.example.turtlewowcompanion.ui.common.ShimmerLoadingScreen
 import com.example.turtlewowcompanion.ui.common.ThemeBrushes
 import com.example.turtlewowcompanion.ui.common.UiState
@@ -36,18 +35,18 @@ import com.example.turtlewowcompanion.ui.theme.GlassSurface
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ZoneListScreen(
+fun ClassListScreen(
     container: AppContainer,
-    onZoneClick: (Long) -> Unit,
+    onClassClick: (Long) -> Unit,
     onBack: () -> Unit,
-    viewModel: ZoneViewModel = viewModel(factory = ZoneViewModel.Factory(container.zoneRepository))
+    viewModel: ClassViewModel = viewModel(factory = ClassViewModel.Factory(container.classRepository))
 ) {
-    val state by viewModel.zonesState.collectAsState()
+    val state by viewModel.classesState.collectAsState()
 
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Zonas", style = MaterialTheme.typography.titleLarge) },
+                title = { Text("Clases", style = MaterialTheme.typography.titleLarge) },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Volver")
@@ -65,7 +64,7 @@ fun ZoneListScreen(
             is UiState.Loading -> ShimmerLoadingScreen(Modifier.padding(padding))
             is UiState.Error -> ErrorScreen(
                 message = s.message,
-                onRetry = { viewModel.loadZones() },
+                onRetry = { viewModel.loadClasses() },
                 modifier = Modifier.padding(padding)
             )
             is UiState.Success -> {
@@ -76,21 +75,21 @@ fun ZoneListScreen(
                 ) {
                     item {
                         HeroHeader(
-                            title = "Zonas de Azeroth",
-                            subtitle = "${s.data.size} regiones por explorar",
-                            backgroundBrush = ThemeBrushes.zones,
-                            imageRes = R.drawable.img_hero_zones,
+                            title = "Clases de personaje",
+                            subtitle = "${s.data.size} clases disponibles",
+                            backgroundBrush = ThemeBrushes.npcs,
+                            imageRes = R.drawable.img_hero_npcs,
                             height = 140.dp
                         )
                     }
-                    items(s.data, key = { it.id }) { zone ->
+                    items(s.data, key = { it.id }) { wowClass ->
                         WowCardEnhanced(
-                            title = zone.name,
-                            subtitle = "${zone.zoneTypeLabel} · Nv ${zone.level} · ${zone.factionName}",
-                            backgroundBrush = ImageMapper.zoneBrush(zone.name),
-                            imageRes = ImageMapper.zoneImageRes(zone.name),
-                            faction = zone.factionName,
-                            onClick = { onZoneClick(zone.id) }
+                            title = wowClass.name,
+                            subtitle = "${wowClass.roleLabel} · ${wowClass.resourceLabel}",
+                            backgroundBrush = ThemeBrushes.npcs,
+                            imageRes = null,
+                            faction = "Neutral",
+                            onClick = { onClassClick(wowClass.id) }
                         )
                     }
                 }

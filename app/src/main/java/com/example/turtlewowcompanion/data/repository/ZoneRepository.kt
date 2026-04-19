@@ -14,12 +14,13 @@ class ZoneRepository(
     private val api: TurtleWowApi,
     private val zoneDao: ZoneDao
 ) {
-    // Intenta red primero, si falla usa caché local
+    // Intenta red primero (respuesta paginada), si falla usa caché local
     fun getZones(): Flow<UiState<List<Zone>>> = flow {
         emit(UiState.Loading)
         try {
-            val remote = api.getZones()
-            zoneDao.upsertAll(remote.map { it.toEntity() })
+            val response = api.getZones(page = 0, size = 50)
+            val zones = response.content
+            zoneDao.upsertAll(zones.map { it.toEntity() })
             zoneDao.observeAll().collect { entities ->
                 emit(UiState.Success(entities.map { it.toDomain() }))
             }
@@ -54,5 +55,3 @@ class ZoneRepository(
         }
     }
 }
-
-

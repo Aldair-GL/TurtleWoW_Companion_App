@@ -8,26 +8,31 @@ fun ZoneDto.toDomain(): Zone = Zone(
     id = id,
     name = name,
     description = description,
-    level = level,
-    faction = faction,
-    imageUrl = imageUrl
+    minLevel = minLevel,
+    maxLevel = maxLevel,
+    continent = continent,
+    zoneType = zoneType,
+    factionName = factionName
 )
 
 fun ZoneDto.toEntity(): ZoneCacheEntity = ZoneCacheEntity(
     id = id,
     name = name,
     description = description,
-    level = level,
-    faction = faction,
-    imageUrl = imageUrl
+    minLevel = minLevel,
+    maxLevel = maxLevel,
+    continent = continent,
+    zoneType = zoneType,
+    factionName = factionName
 )
 
 fun ZoneCacheEntity.toDomain(): Zone = Zone(
     id = id,
     name = name,
     description = description,
-    level = level,
-    faction = faction,
-    imageUrl = imageUrl
+    minLevel = minLevel,
+    maxLevel = maxLevel,
+    continent = continent,
+    zoneType = zoneType,
+    factionName = factionName
 )
-

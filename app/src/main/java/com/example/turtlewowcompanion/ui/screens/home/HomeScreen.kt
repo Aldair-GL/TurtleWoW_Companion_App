@@ -42,8 +42,8 @@ import com.example.turtlewowcompanion.ui.theme.WowGold
 @Composable
 fun HomeScreen(
     onNavigateToZones: () -> Unit,
-    onNavigateToQuests: () -> Unit,
-    onNavigateToNpcs: () -> Unit
+    onNavigateToRaces: () -> Unit,
+    onNavigateToClasses: () -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -127,20 +127,20 @@ fun HomeScreen(
                 onClick = onNavigateToZones
             )
             HomeCategoryCardEnhanced(
-                title = "Misiones",
-                description = "Cadenas de quests y aventuras épicas",
+                title = "Razas",
+                description = "8 razas jugables de Alianza y Horda",
                 icon = Icons.AutoMirrored.Filled.MenuBook,
                 backgroundBrush = ThemeBrushes.quests,
                 imageRes = R.drawable.img_cat_quests,
-                onClick = onNavigateToQuests
+                onClick = onNavigateToRaces
             )
             HomeCategoryCardEnhanced(
-                title = "Personajes",
-                description = "NPCs, vendedores y jefes de mazmorra",
+                title = "Clases",
+                description = "9 clases de personaje del WoW clásico",
                 icon = Icons.Default.People,
                 backgroundBrush = ThemeBrushes.npcs,
                 imageRes = R.drawable.img_cat_npcs,
-                onClick = onNavigateToNpcs
+                onClick = onNavigateToClasses
             )
         }
 
