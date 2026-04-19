@@ -1,5 +1,6 @@
 package com.example.turtlewowcompanion.data.remote
 
+import com.example.turtlewowcompanion.data.remote.dto.BossDto
 import com.example.turtlewowcompanion.data.remote.dto.FactionDto
 import com.example.turtlewowcompanion.data.remote.dto.NpcDto
 import com.example.turtlewowcompanion.data.remote.dto.PagedResponseDto
@@ -67,6 +68,13 @@ interface TurtleWowApi {
 
     @GET("api/v1/professions/{id}")
     suspend fun getProfessionById(@Path("id") id: Long): ProfessionDto
+
+    // ── Bosses de mazmorra ─────────────────────────────────────────────────
+    @GET("api/v1/zones/{zoneId}/bosses")
+    suspend fun getZoneBosses(@Path("zoneId") zoneId: Long): List<BossDto>
+
+    @GET("api/v1/bosses/{id}")
+    suspend fun getBossById(@Path("id") id: Long): BossDto
 
     // ── Búsqueda (legacy, puede no existir en backend) ──────────────────────
     @GET("api/search")

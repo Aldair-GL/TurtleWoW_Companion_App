@@ -12,6 +12,6 @@ data class ZoneCacheEntity(
     val maxLevel: Int,
     val continent: String,
     val zoneType: String,
-    val factionName: String
+    val factionName: String?
 )
 

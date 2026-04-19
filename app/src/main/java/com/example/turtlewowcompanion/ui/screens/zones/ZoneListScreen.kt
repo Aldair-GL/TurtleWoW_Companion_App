@@ -3,11 +3,15 @@ package com.example.turtlewowcompanion.ui.screens.zones
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Castle
+import androidx.compose.material.icons.filled.Explore
+import androidx.compose.material.icons.filled.Shield
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -17,19 +21,11 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.turtlewowcompanion.R
-import com.example.turtlewowcompanion.di.AppContainer
-import com.example.turtlewowcompanion.ui.common.ErrorScreen
 import com.example.turtlewowcompanion.ui.common.HeroHeader
-import com.example.turtlewowcompanion.ui.common.ImageMapper
-import com.example.turtlewowcompanion.ui.common.ShimmerLoadingScreen
 import com.example.turtlewowcompanion.ui.common.ThemeBrushes
-import com.example.turtlewowcompanion.ui.common.UiState
 import com.example.turtlewowcompanion.ui.common.WowCardEnhanced
 import com.example.turtlewowcompanion.ui.theme.DarkBackground
 import com.example.turtlewowcompanion.ui.theme.GlassSurface
@@ -37,13 +33,11 @@ import com.example.turtlewowcompanion.ui.theme.GlassSurface
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ZoneListScreen(
-    container: AppContainer,
-    onZoneClick: (Long) -> Unit,
-    onBack: () -> Unit,
-    viewModel: ZoneViewModel = viewModel(factory = ZoneViewModel.Factory(container.zoneRepository))
+    onNavigateToCities: () -> Unit,
+    onNavigateToDungeons: () -> Unit,
+    onNavigateToOpenWorld: () -> Unit,
+    onBack: () -> Unit
 ) {
-    val state by viewModel.zonesState.collectAsState()
-
     Scaffold(
         topBar = {
             TopAppBar(
@@ -61,41 +55,50 @@ fun ZoneListScreen(
         },
         containerColor = DarkBackground
     ) { padding ->
-        when (val s = state) {
-            is UiState.Loading -> ShimmerLoadingScreen(Modifier.padding(padding))
-            is UiState.Error -> ErrorScreen(
-                message = s.message,
-                onRetry = { viewModel.loadZones() },
-                modifier = Modifier.padding(padding)
-            )
-            is UiState.Success -> {
-                LazyColumn(
-                    modifier = Modifier.fillMaxSize().padding(padding),
-                    contentPadding = PaddingValues(16.dp),
-                    verticalArrangement = Arrangement.spacedBy(10.dp)
-                ) {
-                    item {
-                        HeroHeader(
-                            title = "Zonas de Azeroth",
-                            subtitle = "${s.data.size} regiones por explorar",
-                            backgroundBrush = ThemeBrushes.zones,
-                            imageRes = R.drawable.img_hero_zones,
-                            height = 140.dp
-                        )
-                    }
-                    items(s.data, key = { it.id }) { zone ->
-                        WowCardEnhanced(
-                            title = zone.name,
-                            subtitle = "${zone.zoneTypeLabel} · Nv ${zone.level} · ${zone.factionName}",
-                            backgroundBrush = ImageMapper.zoneBrush(zone.name),
-                            imageRes = ImageMapper.zoneImageRes(zone.name),
-                            faction = zone.factionName,
-                            onClick = { onZoneClick(zone.id) }
-                        )
-                    }
-                }
+        LazyColumn(
+            modifier = Modifier.fillMaxSize().padding(padding),
+            contentPadding = PaddingValues(16.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            item {
+                HeroHeader(
+                    title = "Zonas de Azeroth",
+                    subtitle = "Explora el mundo de Warcraft",
+                    backgroundBrush = ThemeBrushes.zones,
+                    imageRes = R.drawable.img_hero_zones,
+                    height = 140.dp
+                )
+            }
+            item {
+                WowCardEnhanced(
+                    title = "Mundo abierto",
+                    subtitle = "Regiones, bosques, desiertos y mas",
+                    backgroundBrush = ThemeBrushes.zones,
+                    imageRes = null,
+                    faction = "Neutral",
+                    onClick = onNavigateToOpenWorld
+                )
+            }
+            item {
+                WowCardEnhanced(
+                    title = "Ciudades",
+                    subtitle = "Capitales de Alianza y Horda",
+                    backgroundBrush = ThemeBrushes.quests,
+                    imageRes = null,
+                    faction = "Neutral",
+                    onClick = onNavigateToCities
+                )
+            }
+            item {
+                WowCardEnhanced(
+                    title = "Mazmorras",
+                    subtitle = "Instancias de grupo con jefes y botin",
+                    backgroundBrush = ThemeBrushes.npcs,
+                    imageRes = null,
+                    faction = "Neutral",
+                    onClick = onNavigateToDungeons
+                )
             }
         }
     }
 }
-

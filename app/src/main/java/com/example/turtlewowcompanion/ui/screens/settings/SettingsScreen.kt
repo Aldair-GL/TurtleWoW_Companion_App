@@ -1,7 +1,6 @@
 package com.example.turtlewowcompanion.ui.screens.settings
 
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -10,18 +9,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Switch
-import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.turtlewowcompanion.di.AppContainer
 import com.example.turtlewowcompanion.ui.common.GlassCard
 import com.example.turtlewowcompanion.ui.common.WowDivider
@@ -32,11 +25,8 @@ import com.example.turtlewowcompanion.ui.theme.WowGold
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsScreen(
-    container: AppContainer,
-    viewModel: SettingsViewModel = viewModel(factory = SettingsViewModel.Factory(container.settingsRepository))
+    container: AppContainer
 ) {
-    val isDark by viewModel.isDarkTheme.collectAsState()
-
     Scaffold(
         topBar = {
             TopAppBar(
@@ -55,43 +45,6 @@ fun SettingsScreen(
                 .padding(padding)
                 .padding(16.dp)
         ) {
-            GlassCard(
-                modifier = Modifier.fillMaxWidth(),
-                accentColor = WowGold
-            ) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Column(Modifier.weight(1f)) {
-                        Text(
-                            "Tema oscuro",
-                            style = MaterialTheme.typography.titleMedium,
-                            color = MaterialTheme.colorScheme.onSurface
-                        )
-                        Text(
-                            "Estética WoW con fondos oscuros",
-                            style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                    }
-                    Switch(
-                        checked = isDark,
-                        onCheckedChange = { viewModel.toggleDarkTheme(it) },
-                        colors = SwitchDefaults.colors(
-                            checkedThumbColor = WowGold,
-                            checkedTrackColor = WowGold.copy(alpha = 0.3f)
-                        )
-                    )
-                }
-            }
-
-            Spacer(modifier = Modifier.height(24.dp))
-            WowDivider()
-            Spacer(modifier = Modifier.height(24.dp))
-
             GlassCard(
                 modifier = Modifier.fillMaxWidth(),
                 accentColor = WowGold
@@ -116,6 +69,29 @@ fun SettingsScreen(
                     Spacer(modifier = Modifier.height(4.dp))
                     Text(
                         "Proyecto académico — Android + Spring Boot",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+            }
+
+            Spacer(modifier = Modifier.height(24.dp))
+            WowDivider()
+            Spacer(modifier = Modifier.height(24.dp))
+
+            GlassCard(
+                modifier = Modifier.fillMaxWidth(),
+                accentColor = WowGold
+            ) {
+                Column(Modifier.padding(16.dp)) {
+                    Text(
+                        "Datos",
+                        style = MaterialTheme.typography.titleMedium,
+                        color = WowGold
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Text(
+                        "Los datos se obtienen del servidor y se almacenan localmente para uso sin conexión.",
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )

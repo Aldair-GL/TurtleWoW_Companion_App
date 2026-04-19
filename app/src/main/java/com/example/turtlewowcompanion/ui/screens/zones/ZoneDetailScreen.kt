@@ -12,6 +12,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -55,6 +57,7 @@ fun ZoneDetailScreen(
     zoneId: Long,
     container: AppContainer,
     onBack: () -> Unit,
+    onNavigateToBosses: ((Long) -> Unit)? = null,
     viewModel: ZoneViewModel = viewModel(factory = ZoneViewModel.Factory(container.zoneRepository))
 ) {
     val state by viewModel.zoneDetailState.collectAsState()
@@ -141,7 +144,7 @@ fun ZoneDetailScreen(
                                     DetailRow("Nivel recomendado", zone.level)
                                     DetailRow("Tipo", zone.zoneTypeLabel)
                                     DetailRow("Continente", zone.continentLabel)
-                                    DetailRow("Facción", zone.factionName)
+                                    DetailRow("Facción", zone.faction)
                                 }
                             }
 
@@ -154,6 +157,21 @@ fun ZoneDetailScreen(
                                 style = MaterialTheme.typography.bodyLarge,
                                 color = MaterialTheme.colorScheme.onSurface
                             )
+
+                            // Botón "Ver jefes" solo para mazmorras y raids
+                            if (zone.zoneType in listOf("DUNGEON", "RAID") && onNavigateToBosses != null) {
+                                Spacer(modifier = Modifier.height(20.dp))
+                                Button(
+                                    onClick = { onNavigateToBosses(zone.id) },
+                                    modifier = Modifier.fillMaxWidth(),
+                                    colors = ButtonDefaults.buttonColors(
+                                        containerColor = factionColors.primary,
+                                        contentColor = factionColors.accent
+                                    )
+                                ) {
+                                    Text("Ver jefes de mazmorra")
+                                }
+                            }
                         }
                     }
                 }

@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.turtlewowcompanion.data.repository.ZoneRepository
 import com.example.turtlewowcompanion.domain.model.Zone
 import com.example.turtlewowcompanion.ui.common.UiState
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -19,12 +20,15 @@ class ZoneViewModel(private val repository: ZoneRepository) : ViewModel() {
     private val _zoneDetailState = MutableStateFlow<UiState<Zone>>(UiState.Loading)
     val zoneDetailState: StateFlow<UiState<Zone>> = _zoneDetailState.asStateFlow()
 
+    private var loadZonesJob: Job? = null
+
     init {
         loadZones()
     }
 
     fun loadZones() {
-        viewModelScope.launch {
+        loadZonesJob?.cancel()
+        loadZonesJob = viewModelScope.launch {
             repository.getZones().collect { state ->
                 _zonesState.value = state
             }
@@ -45,4 +49,3 @@ class ZoneViewModel(private val repository: ZoneRepository) : ViewModel() {
         }
     }
 }
-

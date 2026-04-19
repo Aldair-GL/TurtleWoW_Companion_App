@@ -4,6 +4,7 @@ import android.content.Context
 import com.example.turtlewowcompanion.data.local.AppDatabase
 import com.example.turtlewowcompanion.data.remote.NetworkModule
 import com.example.turtlewowcompanion.data.remote.TurtleWowApi
+import com.example.turtlewowcompanion.data.repository.BossRepository
 import com.example.turtlewowcompanion.data.repository.FavoriteRepository
 import com.example.turtlewowcompanion.data.repository.NpcRepository
 import com.example.turtlewowcompanion.data.repository.QuestRepository
@@ -25,6 +26,7 @@ class AppContainer(context: Context) {
     val zoneRepository: ZoneRepository = ZoneRepository(api, database.zoneDao())
     val raceRepository: RaceRepository = RaceRepository(api)
     val classRepository: WowClassRepository = WowClassRepository(api)
+    val bossRepository: BossRepository = BossRepository(api)
     val questRepository: QuestRepository = QuestRepository(api, database.questDao())
     val npcRepository: NpcRepository = NpcRepository(api, database.npcDao())
     val favoriteRepository: FavoriteRepository = FavoriteRepository(database.favoriteDao())

@@ -5,12 +5,15 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.example.turtlewowcompanion.di.AppContainer
+import com.example.turtlewowcompanion.ui.screens.bosses.BossDetailScreen
+import com.example.turtlewowcompanion.ui.screens.bosses.BossListScreen
 import com.example.turtlewowcompanion.ui.screens.classes.ClassDetailScreen
 import com.example.turtlewowcompanion.ui.screens.classes.ClassListScreen
 import com.example.turtlewowcompanion.ui.screens.favorites.FavoritesScreen
@@ -23,23 +26,26 @@ import com.example.turtlewowcompanion.ui.screens.races.RaceDetailScreen
 import com.example.turtlewowcompanion.ui.screens.races.RaceListScreen
 import com.example.turtlewowcompanion.ui.screens.search.SearchScreen
 import com.example.turtlewowcompanion.ui.screens.settings.SettingsScreen
+import com.example.turtlewowcompanion.ui.screens.zones.ZoneCategoryScreen
 import com.example.turtlewowcompanion.ui.screens.zones.ZoneDetailScreen
 import com.example.turtlewowcompanion.ui.screens.zones.ZoneListScreen
 
-private const val ANIM_DURATION = 350
+private const val ANIM = 350
 
 @Composable
 fun NavGraph(
     navController: NavHostController,
-    container: AppContainer
+    container: AppContainer,
+    modifier: Modifier = Modifier
 ) {
     NavHost(
         navController = navController,
         startDestination = Screen.Home.route,
-        enterTransition = { fadeIn(animationSpec = tween(ANIM_DURATION)) },
-        exitTransition = { fadeOut(animationSpec = tween(ANIM_DURATION)) }
+        modifier = modifier,
+        enterTransition = { fadeIn(tween(ANIM)) },
+        exitTransition = { fadeOut(tween(ANIM)) }
     ) {
-
+        // ── Home ───────────────────────────────────────────────────────────
         composable(Screen.Home.route) {
             HomeScreen(
                 onNavigateToZones = { navController.navigate(Screen.ZoneList.route) },
@@ -48,182 +54,186 @@ fun NavGraph(
             )
         }
 
-        // ── Zonas ──────────────────────────────────────────────────────────
+        // ── Zonas: menú jerárquico ─────────────────────────────────────────
         composable(
             route = Screen.ZoneList.route,
-            enterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Left, tween(ANIM_DURATION)) },
-            exitTransition = { fadeOut(tween(ANIM_DURATION)) },
-            popEnterTransition = { fadeIn(tween(ANIM_DURATION)) },
-            popExitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Right, tween(ANIM_DURATION)) }
+            enterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Left, tween(ANIM)) },
+            popExitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Right, tween(ANIM)) }
         ) {
             ZoneListScreen(
-                container = container,
-                onZoneClick = { id -> navController.navigate(Screen.ZoneDetail.createRoute(id)) },
+                onNavigateToCities = { navController.navigate(Screen.ZoneCities.route) },
+                onNavigateToDungeons = { navController.navigate(Screen.ZoneDungeons.route) },
+                onNavigateToOpenWorld = { navController.navigate(Screen.ZoneOpenWorld.route) },
                 onBack = { navController.popBackStack() }
             )
         }
+
+        // Mundo abierto
+        composable(
+            route = Screen.ZoneOpenWorld.route,
+            enterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Left, tween(ANIM)) },
+            popExitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Right, tween(ANIM)) }
+        ) {
+            ZoneCategoryScreen(
+                container = container, zoneType = "OPEN_WORLD", title = "Mundo abierto",
+                onZoneClick = { navController.navigate(Screen.ZoneDetail.createRoute(it)) },
+                onBack = { navController.popBackStack() }
+            )
+        }
+
+        // Ciudades
+        composable(
+            route = Screen.ZoneCities.route,
+            enterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Left, tween(ANIM)) },
+            popExitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Right, tween(ANIM)) }
+        ) {
+            ZoneCategoryScreen(
+                container = container, zoneType = "CITY", title = "Ciudades",
+                onZoneClick = { navController.navigate(Screen.ZoneDetail.createRoute(it)) },
+                onBack = { navController.popBackStack() }
+            )
+        }
+
+        // Mazmorras
+        composable(
+            route = Screen.ZoneDungeons.route,
+            enterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Left, tween(ANIM)) },
+            popExitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Right, tween(ANIM)) }
+        ) {
+            ZoneCategoryScreen(
+                container = container, zoneType = "DUNGEON", title = "Mazmorras",
+                onZoneClick = { navController.navigate(Screen.ZoneDetail.createRoute(it)) },
+                onBack = { navController.popBackStack() }
+            )
+        }
+
+        // Detalle de zona (con botón "Ver jefes" para mazmorras)
         composable(
             route = Screen.ZoneDetail.route,
             arguments = listOf(navArgument("id") { type = NavType.LongType }),
-            enterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Left, tween(ANIM_DURATION)) },
-            popExitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Right, tween(ANIM_DURATION)) }
-        ) { backStackEntry ->
-            val id = backStackEntry.arguments?.getLong("id") ?: return@composable
+            enterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Left, tween(ANIM)) },
+            popExitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Right, tween(ANIM)) }
+        ) { entry ->
+            val id = entry.arguments?.getLong("id") ?: return@composable
             ZoneDetailScreen(
                 zoneId = id,
                 container = container,
+                onBack = { navController.popBackStack() },
+                onNavigateToBosses = { zoneId ->
+                    navController.navigate(Screen.BossList.createRoute(zoneId))
+                }
+            )
+        }
+
+        // ── Bosses ─────────────────────────────────────────────────────────
+        composable(
+            route = Screen.BossList.route,
+            arguments = listOf(navArgument("zoneId") { type = NavType.LongType }),
+            enterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Left, tween(ANIM)) },
+            popExitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Right, tween(ANIM)) }
+        ) { entry ->
+            val zoneId = entry.arguments?.getLong("zoneId") ?: return@composable
+            BossListScreen(
+                zoneId = zoneId,
+                zoneName = "",
+                container = container,
+                onBossClick = { navController.navigate(Screen.BossDetail.createRoute(it)) },
                 onBack = { navController.popBackStack() }
             )
+        }
+
+        composable(
+            route = Screen.BossDetail.route,
+            arguments = listOf(navArgument("id") { type = NavType.LongType }),
+            enterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Left, tween(ANIM)) },
+            popExitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Right, tween(ANIM)) }
+        ) { entry ->
+            val id = entry.arguments?.getLong("id") ?: return@composable
+            BossDetailScreen(bossId = id, container = container, onBack = { navController.popBackStack() })
         }
 
         // ── Razas ──────────────────────────────────────────────────────────
         composable(
             route = Screen.RaceList.route,
-            enterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Left, tween(ANIM_DURATION)) },
-            exitTransition = { fadeOut(tween(ANIM_DURATION)) },
-            popEnterTransition = { fadeIn(tween(ANIM_DURATION)) },
-            popExitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Right, tween(ANIM_DURATION)) }
+            enterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Left, tween(ANIM)) },
+            popExitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Right, tween(ANIM)) }
         ) {
             RaceListScreen(
                 container = container,
-                onRaceClick = { id -> navController.navigate(Screen.RaceDetail.createRoute(id)) },
+                onRaceClick = { navController.navigate(Screen.RaceDetail.createRoute(it)) },
                 onBack = { navController.popBackStack() }
             )
         }
         composable(
             route = Screen.RaceDetail.route,
             arguments = listOf(navArgument("id") { type = NavType.LongType }),
-            enterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Left, tween(ANIM_DURATION)) },
-            popExitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Right, tween(ANIM_DURATION)) }
-        ) { backStackEntry ->
-            val id = backStackEntry.arguments?.getLong("id") ?: return@composable
-            RaceDetailScreen(
-                raceId = id,
-                container = container,
-                onBack = { navController.popBackStack() }
-            )
+            enterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Left, tween(ANIM)) },
+            popExitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Right, tween(ANIM)) }
+        ) { entry ->
+            val id = entry.arguments?.getLong("id") ?: return@composable
+            RaceDetailScreen(raceId = id, container = container, onBack = { navController.popBackStack() })
         }
 
         // ── Clases ─────────────────────────────────────────────────────────
         composable(
             route = Screen.ClassList.route,
-            enterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Left, tween(ANIM_DURATION)) },
-            exitTransition = { fadeOut(tween(ANIM_DURATION)) },
-            popEnterTransition = { fadeIn(tween(ANIM_DURATION)) },
-            popExitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Right, tween(ANIM_DURATION)) }
+            enterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Left, tween(ANIM)) },
+            popExitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Right, tween(ANIM)) }
         ) {
             ClassListScreen(
                 container = container,
-                onClassClick = { id -> navController.navigate(Screen.ClassDetail.createRoute(id)) },
+                onClassClick = { navController.navigate(Screen.ClassDetail.createRoute(it)) },
                 onBack = { navController.popBackStack() }
             )
         }
         composable(
             route = Screen.ClassDetail.route,
             arguments = listOf(navArgument("id") { type = NavType.LongType }),
-            enterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Left, tween(ANIM_DURATION)) },
-            popExitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Right, tween(ANIM_DURATION)) }
-        ) { backStackEntry ->
-            val id = backStackEntry.arguments?.getLong("id") ?: return@composable
-            ClassDetailScreen(
-                classId = id,
-                container = container,
-                onBack = { navController.popBackStack() }
-            )
+            enterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Left, tween(ANIM)) },
+            popExitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Right, tween(ANIM)) }
+        ) { entry ->
+            val id = entry.arguments?.getLong("id") ?: return@composable
+            ClassDetailScreen(classId = id, container = container, onBack = { navController.popBackStack() })
         }
 
-        // ── Legacy: Quests / NPCs (para favoritos y búsqueda guardada) ─────
-        composable(
-            route = Screen.QuestList.route,
-            enterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Left, tween(ANIM_DURATION)) },
-            popExitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Right, tween(ANIM_DURATION)) }
-        ) {
-            QuestListScreen(
-                container = container,
-                onQuestClick = {},
-                onBack = { navController.popBackStack() }
-            )
+        // ── Legacy: Quests / NPCs ──────────────────────────────────────────
+        composable(Screen.QuestList.route) {
+            QuestListScreen(container = container, onQuestClick = {}, onBack = { navController.popBackStack() })
         }
-        composable(
-            route = Screen.QuestDetail.route,
-            arguments = listOf(navArgument("id") { type = NavType.LongType })
-        ) { backStackEntry ->
-            val id = backStackEntry.arguments?.getLong("id") ?: return@composable
-            QuestDetailScreen(
-                questId = id,
-                container = container,
-                onBack = { navController.popBackStack() }
-            )
+        composable(Screen.QuestDetail.route, arguments = listOf(navArgument("id") { type = NavType.LongType })) { entry ->
+            val id = entry.arguments?.getLong("id") ?: return@composable
+            QuestDetailScreen(questId = id, container = container, onBack = { navController.popBackStack() })
         }
-        composable(
-            route = Screen.NpcList.route,
-            enterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Left, tween(ANIM_DURATION)) },
-            popExitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Right, tween(ANIM_DURATION)) }
-        ) {
-            NpcListScreen(
-                container = container,
-                onNpcClick = {},
-                onBack = { navController.popBackStack() }
-            )
+        composable(Screen.NpcList.route) {
+            NpcListScreen(container = container, onNpcClick = {}, onBack = { navController.popBackStack() })
         }
-        composable(
-            route = Screen.NpcDetail.route,
-            arguments = listOf(navArgument("id") { type = NavType.LongType })
-        ) { backStackEntry ->
-            val id = backStackEntry.arguments?.getLong("id") ?: return@composable
-            NpcDetailScreen(
-                npcId = id,
-                container = container,
-                onBack = { navController.popBackStack() }
-            )
+        composable(Screen.NpcDetail.route, arguments = listOf(navArgument("id") { type = NavType.LongType })) { entry ->
+            val id = entry.arguments?.getLong("id") ?: return@composable
+            NpcDetailScreen(npcId = id, container = container, onBack = { navController.popBackStack() })
         }
 
-        // ── Búsqueda ────────────────────────────────────────────────────────
-        composable(
-            route = Screen.Search.route,
-            enterTransition = { fadeIn(tween(ANIM_DURATION)) },
-            exitTransition = { fadeOut(tween(ANIM_DURATION)) }
-        ) {
-            SearchScreen(
-                container = container,
-                onResultClick = { type, id ->
-                    when (type) {
-                        "zone"  -> navController.navigate(Screen.ZoneDetail.createRoute(id))
-                        "race"  -> navController.navigate(Screen.RaceDetail.createRoute(id))
-                        "class" -> navController.navigate(Screen.ClassDetail.createRoute(id))
-                        "quest" -> navController.navigate(Screen.QuestDetail.createRoute(id))
-                        "npc"   -> navController.navigate(Screen.NpcDetail.createRoute(id))
-                    }
+        // ── Búsqueda / Favoritos / Ajustes ─────────────────────────────────
+        composable(Screen.Search.route) {
+            SearchScreen(container = container, onResultClick = { type, id ->
+                when (type) {
+                    "zone" -> navController.navigate(Screen.ZoneDetail.createRoute(id))
+                    "race" -> navController.navigate(Screen.RaceDetail.createRoute(id))
+                    "class" -> navController.navigate(Screen.ClassDetail.createRoute(id))
+                    "quest" -> navController.navigate(Screen.QuestDetail.createRoute(id))
+                    "npc" -> navController.navigate(Screen.NpcDetail.createRoute(id))
                 }
-            )
+            })
         }
-
-        // ── Favoritos ──────────────────────────────────────────────────────
-        composable(
-            route = Screen.Favorites.route,
-            enterTransition = { fadeIn(tween(ANIM_DURATION)) },
-            exitTransition = { fadeOut(tween(ANIM_DURATION)) }
-        ) {
-            FavoritesScreen(
-                container = container,
-                onItemClick = { type, refId ->
-                    when (type) {
-                        "ZONE"  -> navController.navigate(Screen.ZoneDetail.createRoute(refId))
-                        "RACE"  -> navController.navigate(Screen.RaceDetail.createRoute(refId))
-                        "CLASS" -> navController.navigate(Screen.ClassDetail.createRoute(refId))
-                        "QUEST" -> navController.navigate(Screen.QuestDetail.createRoute(refId))
-                        "NPC"   -> navController.navigate(Screen.NpcDetail.createRoute(refId))
-                    }
+        composable(Screen.Favorites.route) {
+            FavoritesScreen(container = container, onItemClick = { type, refId ->
+                when (type) {
+                    "ZONE" -> navController.navigate(Screen.ZoneDetail.createRoute(refId))
+                    "QUEST" -> navController.navigate(Screen.QuestDetail.createRoute(refId))
+                    "NPC" -> navController.navigate(Screen.NpcDetail.createRoute(refId))
                 }
-            )
+            })
         }
-
-        // ── Ajustes ────────────────────────────────────────────────────────
-        composable(
-            route = Screen.Settings.route,
-            enterTransition = { fadeIn(tween(ANIM_DURATION)) },
-            exitTransition = { fadeOut(tween(ANIM_DURATION)) }
-        ) {
+        composable(Screen.Settings.route) {
             SettingsScreen(container = container)
         }
     }

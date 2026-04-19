@@ -10,5 +10,5 @@ data class ZoneDto(
     @SerializedName("maxLevel") val maxLevel: Int,
     @SerializedName("continent") val continent: String,
     @SerializedName("zoneType") val zoneType: String,
-    @SerializedName("factionName") val factionName: String
+    @SerializedName("factionName") val factionName: String?
 )

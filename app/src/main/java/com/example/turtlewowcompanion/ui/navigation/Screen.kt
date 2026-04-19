@@ -4,9 +4,21 @@ package com.example.turtlewowcompanion.ui.navigation
 sealed class Screen(val route: String) {
     data object Home : Screen("home")
 
+    // Zonas — navegación jerárquica
     data object ZoneList : Screen("zones")
+    data object ZoneCities : Screen("zones/cities")
+    data object ZoneDungeons : Screen("zones/dungeons")
+    data object ZoneOpenWorld : Screen("zones/openworld")
     data object ZoneDetail : Screen("zones/{id}") {
         fun createRoute(id: Long) = "zones/$id"
+    }
+
+    // Bosses de mazmorra
+    data object BossList : Screen("zones/{zoneId}/bosses") {
+        fun createRoute(zoneId: Long) = "zones/$zoneId/bosses"
+    }
+    data object BossDetail : Screen("bosses/{id}") {
+        fun createRoute(id: Long) = "bosses/$id"
     }
 
     data object RaceList : Screen("races")
