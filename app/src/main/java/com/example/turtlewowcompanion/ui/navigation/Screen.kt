@@ -2,6 +2,7 @@ package com.example.turtlewowcompanion.ui.navigation
 
 /** Rutas de navegación de la app. */
 sealed class Screen(val route: String) {
+    data object Splash : Screen("splash")
     data object Home : Screen("home")
 
     // Zonas — navegación jerárquica

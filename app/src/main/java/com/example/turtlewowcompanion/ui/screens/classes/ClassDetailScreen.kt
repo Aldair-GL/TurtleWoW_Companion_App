@@ -10,6 +10,8 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -22,11 +24,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.turtlewowcompanion.R
 import com.example.turtlewowcompanion.di.AppContainer
+import com.example.turtlewowcompanion.domain.model.FavoriteType
 import com.example.turtlewowcompanion.ui.common.DetailRow
 import com.example.turtlewowcompanion.ui.common.ErrorScreen
 import com.example.turtlewowcompanion.ui.common.GlassCard
@@ -39,6 +46,7 @@ import com.example.turtlewowcompanion.ui.theme.DarkBackground
 import com.example.turtlewowcompanion.ui.theme.GlassSurface
 import com.example.turtlewowcompanion.ui.theme.NeutralFactionColors
 import com.example.turtlewowcompanion.ui.theme.WowGold
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -49,8 +57,13 @@ fun ClassDetailScreen(
     viewModel: ClassViewModel = viewModel(factory = ClassViewModel.Factory(container.classRepository))
 ) {
     val state by viewModel.classDetailState.collectAsState()
+    val scope = rememberCoroutineScope()
+    var isFavorite by remember { mutableStateOf(false) }
 
-    LaunchedEffect(classId) { viewModel.loadClassById(classId) }
+    LaunchedEffect(classId) {
+        viewModel.loadClassById(classId)
+        isFavorite = container.favoriteRepository.isFavorite(classId, FavoriteType.CLASS)
+    }
 
     Scaffold(
         topBar = {
@@ -59,6 +72,26 @@ fun ClassDetailScreen(
                 navigationIcon = {
                     IconButton(onClick = onBack) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Volver")
+                    }
+                },
+                actions = {
+                    IconButton(onClick = {
+                        scope.launch {
+                            val wc = (state as? UiState.Success)?.data ?: return@launch
+                            container.favoriteRepository.toggleFavorite(
+                                refId = wc.id,
+                                type = FavoriteType.CLASS,
+                                name = wc.name,
+                                subtitle = "Clase · ${wc.roleLabel}"
+                            )
+                            isFavorite = !isFavorite
+                        }
+                    }) {
+                        Icon(
+                            imageVector = if (isFavorite) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
+                            contentDescription = "Favorito",
+                            tint = if (isFavorite) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurface
+                        )
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
@@ -118,4 +151,3 @@ fun ClassDetailScreen(
         }
     }
 }
-

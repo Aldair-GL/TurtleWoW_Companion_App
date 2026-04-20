@@ -14,6 +14,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -27,11 +29,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.turtlewowcompanion.R
 import com.example.turtlewowcompanion.di.AppContainer
+import com.example.turtlewowcompanion.domain.model.FavoriteType
 import com.example.turtlewowcompanion.ui.common.ErrorScreen
 import com.example.turtlewowcompanion.ui.common.FactionBadge
 import com.example.turtlewowcompanion.ui.common.GlassCard
@@ -45,6 +52,7 @@ import com.example.turtlewowcompanion.ui.theme.FactionThemeProvider
 import com.example.turtlewowcompanion.ui.theme.GlassSurface
 import com.example.turtlewowcompanion.ui.theme.LocalFactionColors
 import com.example.turtlewowcompanion.ui.theme.WowGold
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
@@ -55,8 +63,13 @@ fun RaceDetailScreen(
     viewModel: RaceViewModel = viewModel(factory = RaceViewModel.Factory(container.raceRepository))
 ) {
     val state by viewModel.raceDetailState.collectAsState()
+    val scope = rememberCoroutineScope()
+    var isFavorite by remember { mutableStateOf(false) }
 
-    LaunchedEffect(raceId) { viewModel.loadRaceById(raceId) }
+    LaunchedEffect(raceId) {
+        viewModel.loadRaceById(raceId)
+        isFavorite = container.favoriteRepository.isFavorite(raceId, FavoriteType.RACE)
+    }
 
     Scaffold(
         topBar = {
@@ -65,6 +78,26 @@ fun RaceDetailScreen(
                 navigationIcon = {
                     IconButton(onClick = onBack) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Volver")
+                    }
+                },
+                actions = {
+                    IconButton(onClick = {
+                        scope.launch {
+                            val race = (state as? UiState.Success)?.data ?: return@launch
+                            container.favoriteRepository.toggleFavorite(
+                                refId = race.id,
+                                type = FavoriteType.RACE,
+                                name = race.name,
+                                subtitle = "Raza · ${race.factionName}"
+                            )
+                            isFavorite = !isFavorite
+                        }
+                    }) {
+                        Icon(
+                            imageVector = if (isFavorite) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
+                            contentDescription = "Favorito",
+                            tint = if (isFavorite) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurface
+                        )
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
@@ -153,4 +186,3 @@ fun RaceDetailScreen(
         }
     }
 }
-

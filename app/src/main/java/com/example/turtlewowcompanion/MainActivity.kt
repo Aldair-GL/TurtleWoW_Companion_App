@@ -43,7 +43,7 @@ private fun MainApp(container: AppContainer) {
 
     // Mostrar bottom nav solo en las 4 tabs principales
     val bottomNavRoutes = bottomNavItems.map { it.route }
-    val showBottomBar = currentRoute in bottomNavRoutes
+    val showBottomBar = currentRoute in bottomNavRoutes && currentRoute != Screen.Splash.route
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),

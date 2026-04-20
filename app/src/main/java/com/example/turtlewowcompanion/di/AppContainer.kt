@@ -30,6 +30,6 @@ class AppContainer(context: Context) {
     val questRepository: QuestRepository = QuestRepository(api, database.questDao())
     val npcRepository: NpcRepository = NpcRepository(api, database.npcDao())
     val favoriteRepository: FavoriteRepository = FavoriteRepository(database.favoriteDao())
-    val searchRepository: SearchRepository = SearchRepository(api, database.searchHistoryDao())
+    val searchRepository: SearchRepository = SearchRepository(api, database.searchHistoryDao(), database.zoneDao())
     val settingsRepository: SettingsRepository = SettingsRepository(context.dataStore)
 }

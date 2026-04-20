@@ -26,6 +26,7 @@ import com.example.turtlewowcompanion.ui.screens.races.RaceDetailScreen
 import com.example.turtlewowcompanion.ui.screens.races.RaceListScreen
 import com.example.turtlewowcompanion.ui.screens.search.SearchScreen
 import com.example.turtlewowcompanion.ui.screens.settings.SettingsScreen
+import com.example.turtlewowcompanion.ui.screens.splash.SplashScreen
 import com.example.turtlewowcompanion.ui.screens.zones.ZoneCategoryScreen
 import com.example.turtlewowcompanion.ui.screens.zones.ZoneDetailScreen
 import com.example.turtlewowcompanion.ui.screens.zones.ZoneListScreen
@@ -40,11 +41,20 @@ fun NavGraph(
 ) {
     NavHost(
         navController = navController,
-        startDestination = Screen.Home.route,
+        startDestination = Screen.Splash.route,
         modifier = modifier,
         enterTransition = { fadeIn(tween(ANIM)) },
         exitTransition = { fadeOut(tween(ANIM)) }
     ) {
+        // ── Splash ─────────────────────────────────────────────────────────
+        composable(Screen.Splash.route) {
+            SplashScreen(onFinished = {
+                navController.navigate(Screen.Home.route) {
+                    popUpTo(Screen.Splash.route) { inclusive = true }
+                }
+            })
+        }
+
         // ── Home ───────────────────────────────────────────────────────────
         composable(Screen.Home.route) {
             HomeScreen(
@@ -219,6 +229,7 @@ fun NavGraph(
                     "zone" -> navController.navigate(Screen.ZoneDetail.createRoute(id))
                     "race" -> navController.navigate(Screen.RaceDetail.createRoute(id))
                     "class" -> navController.navigate(Screen.ClassDetail.createRoute(id))
+                    "boss" -> navController.navigate(Screen.BossDetail.createRoute(id))
                     "quest" -> navController.navigate(Screen.QuestDetail.createRoute(id))
                     "npc" -> navController.navigate(Screen.NpcDetail.createRoute(id))
                 }
@@ -228,6 +239,9 @@ fun NavGraph(
             FavoritesScreen(container = container, onItemClick = { type, refId ->
                 when (type) {
                     "ZONE" -> navController.navigate(Screen.ZoneDetail.createRoute(refId))
+                    "RACE" -> navController.navigate(Screen.RaceDetail.createRoute(refId))
+                    "CLASS" -> navController.navigate(Screen.ClassDetail.createRoute(refId))
+                    "BOSS" -> navController.navigate(Screen.BossDetail.createRoute(refId))
                     "QUEST" -> navController.navigate(Screen.QuestDetail.createRoute(refId))
                     "NPC" -> navController.navigate(Screen.NpcDetail.createRoute(refId))
                 }
