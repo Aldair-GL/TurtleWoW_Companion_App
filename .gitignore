@@ -27,4 +27,5 @@ ASSETS_CHECKLIST.md
 
 # Archivos de IDE sensibles
 .idea/copilot*.xml
+adb_reverse.bat
 
