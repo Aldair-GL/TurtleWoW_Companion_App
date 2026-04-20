@@ -15,7 +15,16 @@
 .cxx
 local.properties
 
-# Documentos temporales
+# Documentos internos / temporales
 MONTAJE_VISUAL_BORRAR.txt
 *_BORRAR*
+REPORTE_TECNICO_ANDROID.md
+BACKEND_BOSSES_PROMPT.md
+ASSETS_CHECKLIST.md
+*_PROMPT*.md
+*_CHECKLIST*.md
+*REPORTE*.md
+
+# Archivos de IDE sensibles
+.idea/copilot*.xml
 
