@@ -30,6 +30,7 @@ import com.example.turtlewowcompanion.ui.common.ShimmerLoadingScreen
 import com.example.turtlewowcompanion.ui.common.ThemeBrushes
 import com.example.turtlewowcompanion.ui.common.UiState
 import com.example.turtlewowcompanion.ui.common.WowCardEnhanced
+import com.example.turtlewowcompanion.ui.common.racePortraitRes
 import com.example.turtlewowcompanion.ui.theme.DarkBackground
 import com.example.turtlewowcompanion.ui.theme.GlassSurface
 
@@ -87,7 +88,7 @@ fun RaceListScreen(
                             title = race.name,
                             subtitle = race.factionName,
                             backgroundBrush = ThemeBrushes.quests,
-                            imageRes = null,
+                            imageRes = racePortraitRes(race.name),
                             faction = race.factionName,
                             onClick = { onRaceClick(race.id) }
                         )

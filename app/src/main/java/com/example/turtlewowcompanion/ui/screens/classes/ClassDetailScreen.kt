@@ -42,6 +42,7 @@ import com.example.turtlewowcompanion.ui.common.ShimmerLoadingScreen
 import com.example.turtlewowcompanion.ui.common.ThemeBrushes
 import com.example.turtlewowcompanion.ui.common.UiState
 import com.example.turtlewowcompanion.ui.common.WowDivider
+import com.example.turtlewowcompanion.ui.common.classPortraitRes
 import com.example.turtlewowcompanion.ui.theme.DarkBackground
 import com.example.turtlewowcompanion.ui.theme.GlassSurface
 import com.example.turtlewowcompanion.ui.theme.NeutralFactionColors
@@ -121,7 +122,7 @@ fun ClassDetailScreen(
                         title = wowClass.name,
                         subtitle = "${wowClass.roleLabel} · ${wowClass.resourceLabel}",
                         backgroundBrush = ThemeBrushes.npcs,
-                        imageRes = R.drawable.img_hero_npcs,
+                        imageRes = classPortraitRes(wowClass.name) ?: R.drawable.img_hero_npcs,
                         height = 180.dp
                     )
 

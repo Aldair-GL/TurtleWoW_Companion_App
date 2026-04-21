@@ -13,7 +13,7 @@ object NetworkModule {
     private const val DEVICE_BASE_URL    = "http://127.0.0.1:8084/"
 
     // true = emulador | false = movil fisico con adb reverse
-    private const val USE_EMULATOR = false
+    private const val USE_EMULATOR = true
 
     private val baseUrl: String = if (USE_EMULATOR) EMULATOR_BASE_URL else DEVICE_BASE_URL
 
