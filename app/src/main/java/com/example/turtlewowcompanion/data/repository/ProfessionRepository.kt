@@ -1,25 +1,25 @@
 package com.example.turtlewowcompanion.data.repository
 
-import com.example.turtlewowcompanion.data.local.dao.ClassDao
+import com.example.turtlewowcompanion.data.local.dao.ProfessionDao
 import com.example.turtlewowcompanion.data.mapper.toDomain
 import com.example.turtlewowcompanion.data.mapper.toEntity
 import com.example.turtlewowcompanion.data.remote.TurtleWowApi
-import com.example.turtlewowcompanion.domain.model.WowClass
+import com.example.turtlewowcompanion.domain.model.Profession
 import com.example.turtlewowcompanion.ui.common.UiState
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import java.io.IOException
 
-class WowClassRepository(
+class ProfessionRepository(
     private val api: TurtleWowApi,
-    private val classDao: ClassDao
+    private val professionDao: ProfessionDao
 ) {
-    fun getClasses(): Flow<UiState<List<WowClass>>> = flow {
+    fun getProfessions(): Flow<UiState<List<Profession>>> = flow {
         emit(UiState.Loading)
         try {
-            val remote = api.getClasses()
-            classDao.upsertAll(remote.map { it.toEntity() })
-            classDao.observeAll().collect { entities ->
+            val remote = api.getProfessions()
+            professionDao.upsertAll(remote.map { it.toEntity() })
+            professionDao.observeAll().collect { entities ->
                 emit(UiState.Success(entities.map { it.toDomain() }))
             }
         } catch (e: IOException) {
@@ -29,23 +29,23 @@ class WowClassRepository(
         }
     }
 
-    suspend fun getClassById(id: Long): UiState<WowClass> {
+    suspend fun getProfessionById(id: Long): UiState<Profession> {
         return try {
-            val dto = api.getClassById(id)
+            val dto = api.getProfessionById(id)
             UiState.Success(dto.toDomain())
         } catch (_: Exception) {
-            val cached = classDao.getById(id)
+            val cached = professionDao.getById(id)
             if (cached != null) UiState.Success(cached.toDomain())
-            else UiState.Error("Clase no encontrada")
+            else UiState.Error("Profesión no encontrada")
         }
     }
 
-    private suspend fun kotlinx.coroutines.flow.FlowCollector<UiState<List<WowClass>>>.emitCachedOrError(
+    private suspend fun kotlinx.coroutines.flow.FlowCollector<UiState<List<Profession>>>.emitCachedOrError(
         message: String
     ) {
-        val count = classDao.count()
+        val count = professionDao.count()
         if (count > 0) {
-            classDao.observeAll().collect { entities ->
+            professionDao.observeAll().collect { entities ->
                 emit(UiState.Success(entities.map { it.toDomain() }))
             }
         } else {
@@ -53,3 +53,4 @@ class WowClassRepository(
         }
     }
 }
+

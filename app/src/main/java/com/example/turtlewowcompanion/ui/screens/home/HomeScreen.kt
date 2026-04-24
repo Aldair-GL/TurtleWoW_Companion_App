@@ -15,7 +15,9 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.MenuBook
+import androidx.compose.material.icons.filled.Build
 import androidx.compose.material.icons.filled.Explore
+import androidx.compose.material.icons.filled.Inventory2
 import androidx.compose.material.icons.filled.People
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -43,7 +45,9 @@ import com.example.turtlewowcompanion.ui.theme.WowGold
 fun HomeScreen(
     onNavigateToZones: () -> Unit,
     onNavigateToRaces: () -> Unit,
-    onNavigateToClasses: () -> Unit
+    onNavigateToClasses: () -> Unit,
+    onNavigateToProfessions: () -> Unit,
+    onNavigateToItems: () -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -142,6 +146,22 @@ fun HomeScreen(
                 imageRes = R.drawable.img_cat_npcs,
                 onClick = onNavigateToClasses
             )
+            HomeCategoryCardEnhanced(
+                title = "Profesiones",
+                description = "Oficios primarios y secundarios de Azeroth",
+                icon = Icons.Default.Build,
+                backgroundBrush = ThemeBrushes.quests,
+                imageRes = null,
+                onClick = onNavigateToProfessions
+            )
+            HomeCategoryCardEnhanced(
+                title = "Objetos",
+                description = "Armas, armaduras y tesoros del mundo",
+                icon = Icons.Default.Inventory2,
+                backgroundBrush = ThemeBrushes.npcs,
+                imageRes = null,
+                onClick = onNavigateToItems
+            )
         }
 
         Spacer(modifier = Modifier.height(24.dp))
@@ -230,6 +250,3 @@ private fun HomeCategoryCardEnhanced(
         }
     }
 }
-
-
-

@@ -6,7 +6,9 @@ import com.example.turtlewowcompanion.data.remote.NetworkModule
 import com.example.turtlewowcompanion.data.remote.TurtleWowApi
 import com.example.turtlewowcompanion.data.repository.BossRepository
 import com.example.turtlewowcompanion.data.repository.FavoriteRepository
+import com.example.turtlewowcompanion.data.repository.ItemRepository
 import com.example.turtlewowcompanion.data.repository.NpcRepository
+import com.example.turtlewowcompanion.data.repository.ProfessionRepository
 import com.example.turtlewowcompanion.data.repository.QuestRepository
 import com.example.turtlewowcompanion.data.repository.RaceRepository
 import com.example.turtlewowcompanion.data.repository.SearchRepository
@@ -24,9 +26,11 @@ class AppContainer(context: Context) {
 
     // Repositories
     val zoneRepository: ZoneRepository = ZoneRepository(api, database.zoneDao())
-    val raceRepository: RaceRepository = RaceRepository(api)
-    val classRepository: WowClassRepository = WowClassRepository(api)
-    val bossRepository: BossRepository = BossRepository(api)
+    val raceRepository: RaceRepository = RaceRepository(api, database.raceDao())
+    val classRepository: WowClassRepository = WowClassRepository(api, database.classDao())
+    val bossRepository: BossRepository = BossRepository(api, database.bossDao())
+    val professionRepository: ProfessionRepository = ProfessionRepository(api, database.professionDao())
+    val itemRepository: ItemRepository = ItemRepository(api, database.itemDao())
     val questRepository: QuestRepository = QuestRepository(api, database.questDao())
     val npcRepository: NpcRepository = NpcRepository(api, database.npcDao())
     val favoriteRepository: FavoriteRepository = FavoriteRepository(database.favoriteDao())

@@ -2,6 +2,7 @@ package com.example.turtlewowcompanion.data.remote
 
 import com.example.turtlewowcompanion.data.remote.dto.BossDto
 import com.example.turtlewowcompanion.data.remote.dto.FactionDto
+import com.example.turtlewowcompanion.data.remote.dto.ItemDto
 import com.example.turtlewowcompanion.data.remote.dto.NpcDto
 import com.example.turtlewowcompanion.data.remote.dto.PagedResponseDto
 import com.example.turtlewowcompanion.data.remote.dto.ProfessionDto
@@ -69,6 +70,19 @@ interface TurtleWowApi {
     @GET("api/v1/professions/{id}")
     suspend fun getProfessionById(@Path("id") id: Long): ProfessionDto
 
+    // ── Items (objetos del juego) ─────────────────────────────────────────
+    @GET("api/v1/items")
+    suspend fun getItems(
+        @Query("page") page: Int = 0,
+        @Query("size") size: Int = 200
+    ): PagedResponseDto<ItemDto>
+
+    @GET("api/v1/items/{id}")
+    suspend fun getItemById(@Path("id") id: Long): ItemDto
+
+    @GET("api/v1/bosses/{bossId}/items")
+    suspend fun getItemsByBoss(@Path("bossId") bossId: Long): List<ItemDto>
+
     // ── Bosses de mazmorra ─────────────────────────────────────────────────
     @GET("api/v1/zones/{zoneId}/bosses")
     suspend fun getZoneBosses(@Path("zoneId") zoneId: Long): List<BossDto>
@@ -76,11 +90,11 @@ interface TurtleWowApi {
     @GET("api/v1/bosses/{id}")
     suspend fun getBossById(@Path("id") id: Long): BossDto
 
-    // ── Búsqueda (legacy, puede no existir en backend) ──────────────────────
+    // ── Búsqueda ──────────────────────────────────────────────────────────
     @GET("api/search")
     suspend fun search(@Query("q") query: String): List<SearchResultDto>
 
-    // ── Endpoints legacy (ya no usados, mantenidos para compilación) ─────────
+    // ── Endpoints legacy ─────────────────────────────────────────────────
     @GET("api/quests")
     suspend fun getQuests(): List<QuestDto>
 

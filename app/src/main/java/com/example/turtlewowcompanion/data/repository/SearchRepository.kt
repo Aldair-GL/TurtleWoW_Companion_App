@@ -47,6 +47,22 @@ class SearchRepository(
                 }
             } catch (_: Exception) { /* sin conexión, se omite */ }
 
+            // Buscar en profesiones (backend)
+            try {
+                val professions = api.getProfessions()
+                professions.filter { it.name.lowercase().contains(q) }.forEach { p ->
+                    results.add(SearchResult(p.id, p.name, "profession", p.type ?: ""))
+                }
+            } catch (_: Exception) { /* sin conexión, se omite */ }
+
+            // Buscar en items (backend)
+            try {
+                val items = api.getItems(page = 0, size = 200)
+                items.content.filter { it.name.lowercase().contains(q) }.forEach { i ->
+                    results.add(SearchResult(i.id, i.name, "item", "${i.quality ?: ""} · ${i.type ?: ""}"))
+                }
+            } catch (_: Exception) { /* sin conexión, se omite */ }
+
             UiState.Success(results)
         } catch (e: Exception) {
             UiState.Error("Error en la búsqueda: ${e.localizedMessage}")

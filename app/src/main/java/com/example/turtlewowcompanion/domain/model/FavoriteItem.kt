@@ -10,6 +10,5 @@ data class FavoriteItem(
 )
 
 enum class FavoriteType {
-    ZONE, QUEST, NPC, RACE, CLASS, BOSS
+    ZONE, QUEST, NPC, RACE, CLASS, BOSS, PROFESSION, ITEM
 }
-

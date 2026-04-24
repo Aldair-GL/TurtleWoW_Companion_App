@@ -18,6 +18,7 @@ local.properties
 # Documentos internos / temporales
 MONTAJE_VISUAL_BORRAR.txt
 *_BORRAR*
+*BORRABLE*
 REPORTE_TECNICO_ANDROID.md
 BACKEND_BOSSES_PROMPT.md
 ASSETS_CHECKLIST.md

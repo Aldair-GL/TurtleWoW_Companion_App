@@ -46,4 +46,16 @@ sealed class Screen(val route: String) {
     data object Search : Screen("search")
     data object Favorites : Screen("favorites")
     data object Settings : Screen("settings")
+
+    // Profesiones
+    data object ProfessionList : Screen("professions")
+    data object ProfessionDetail : Screen("professions/{id}") {
+        fun createRoute(id: Long) = "professions/$id"
+    }
+
+    // Items (objetos)
+    data object ItemList : Screen("items")
+    data object ItemDetail : Screen("items/{id}") {
+        fun createRoute(id: Long) = "items/$id"
+    }
 }

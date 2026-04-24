@@ -18,8 +18,12 @@ import com.example.turtlewowcompanion.ui.screens.classes.ClassDetailScreen
 import com.example.turtlewowcompanion.ui.screens.classes.ClassListScreen
 import com.example.turtlewowcompanion.ui.screens.favorites.FavoritesScreen
 import com.example.turtlewowcompanion.ui.screens.home.HomeScreen
+import com.example.turtlewowcompanion.ui.screens.items.ItemDetailScreen
+import com.example.turtlewowcompanion.ui.screens.items.ItemListScreen
 import com.example.turtlewowcompanion.ui.screens.npcs.NpcDetailScreen
 import com.example.turtlewowcompanion.ui.screens.npcs.NpcListScreen
+import com.example.turtlewowcompanion.ui.screens.professions.ProfessionDetailScreen
+import com.example.turtlewowcompanion.ui.screens.professions.ProfessionListScreen
 import com.example.turtlewowcompanion.ui.screens.quests.QuestDetailScreen
 import com.example.turtlewowcompanion.ui.screens.quests.QuestListScreen
 import com.example.turtlewowcompanion.ui.screens.races.RaceDetailScreen
@@ -60,7 +64,9 @@ fun NavGraph(
             HomeScreen(
                 onNavigateToZones = { navController.navigate(Screen.ZoneList.route) },
                 onNavigateToRaces = { navController.navigate(Screen.RaceList.route) },
-                onNavigateToClasses = { navController.navigate(Screen.ClassList.route) }
+                onNavigateToClasses = { navController.navigate(Screen.ClassList.route) },
+                onNavigateToProfessions = { navController.navigate(Screen.ProfessionList.route) },
+                onNavigateToItems = { navController.navigate(Screen.ItemList.route) }
             )
         }
 
@@ -206,6 +212,50 @@ fun NavGraph(
             ClassDetailScreen(classId = id, container = container, onBack = { navController.popBackStack() })
         }
 
+        // ── Profesiones ─────────────────────────────────────────────────────
+        composable(
+            route = Screen.ProfessionList.route,
+            enterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Left, tween(ANIM)) },
+            popExitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Right, tween(ANIM)) }
+        ) {
+            ProfessionListScreen(
+                container = container,
+                onProfessionClick = { navController.navigate(Screen.ProfessionDetail.createRoute(it)) },
+                onBack = { navController.popBackStack() }
+            )
+        }
+        composable(
+            route = Screen.ProfessionDetail.route,
+            arguments = listOf(navArgument("id") { type = NavType.LongType }),
+            enterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Left, tween(ANIM)) },
+            popExitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Right, tween(ANIM)) }
+        ) { entry ->
+            val id = entry.arguments?.getLong("id") ?: return@composable
+            ProfessionDetailScreen(professionId = id, container = container, onBack = { navController.popBackStack() })
+        }
+
+        // ── Items (Objetos) ──────────────────────────────────────────────
+        composable(
+            route = Screen.ItemList.route,
+            enterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Left, tween(ANIM)) },
+            popExitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Right, tween(ANIM)) }
+        ) {
+            ItemListScreen(
+                container = container,
+                onItemClick = { navController.navigate(Screen.ItemDetail.createRoute(it)) },
+                onBack = { navController.popBackStack() }
+            )
+        }
+        composable(
+            route = Screen.ItemDetail.route,
+            arguments = listOf(navArgument("id") { type = NavType.LongType }),
+            enterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Left, tween(ANIM)) },
+            popExitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Right, tween(ANIM)) }
+        ) { entry ->
+            val id = entry.arguments?.getLong("id") ?: return@composable
+            ItemDetailScreen(itemId = id, container = container, onBack = { navController.popBackStack() })
+        }
+
         // ── Legacy: Quests / NPCs ──────────────────────────────────────────
         composable(Screen.QuestList.route) {
             QuestListScreen(container = container, onQuestClick = {}, onBack = { navController.popBackStack() })
@@ -232,6 +282,8 @@ fun NavGraph(
                     "boss" -> navController.navigate(Screen.BossDetail.createRoute(id))
                     "quest" -> navController.navigate(Screen.QuestDetail.createRoute(id))
                     "npc" -> navController.navigate(Screen.NpcDetail.createRoute(id))
+                    "profession" -> navController.navigate(Screen.ProfessionDetail.createRoute(id))
+                    "item" -> navController.navigate(Screen.ItemDetail.createRoute(id))
                 }
             })
         }
@@ -244,6 +296,8 @@ fun NavGraph(
                     "BOSS" -> navController.navigate(Screen.BossDetail.createRoute(refId))
                     "QUEST" -> navController.navigate(Screen.QuestDetail.createRoute(refId))
                     "NPC" -> navController.navigate(Screen.NpcDetail.createRoute(refId))
+                    "PROFESSION" -> navController.navigate(Screen.ProfessionDetail.createRoute(refId))
+                    "ITEM" -> navController.navigate(Screen.ItemDetail.createRoute(refId))
                 }
             })
         }
