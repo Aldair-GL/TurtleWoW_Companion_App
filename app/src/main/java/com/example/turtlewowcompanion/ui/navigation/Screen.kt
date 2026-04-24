@@ -43,6 +43,8 @@ sealed class Screen(val route: String) {
         fun createRoute(id: Long) = "npcs/$id"
     }
 
+    data object Auth : Screen("auth")
+    data object Profile : Screen("profile")
     data object Search : Screen("search")
     data object Favorites : Screen("favorites")
     data object Settings : Screen("settings")

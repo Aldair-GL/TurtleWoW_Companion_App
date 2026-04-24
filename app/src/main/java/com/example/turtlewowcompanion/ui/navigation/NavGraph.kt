@@ -24,6 +24,7 @@ import com.example.turtlewowcompanion.ui.screens.npcs.NpcDetailScreen
 import com.example.turtlewowcompanion.ui.screens.npcs.NpcListScreen
 import com.example.turtlewowcompanion.ui.screens.professions.ProfessionDetailScreen
 import com.example.turtlewowcompanion.ui.screens.professions.ProfessionListScreen
+import com.example.turtlewowcompanion.ui.screens.profile.ProfileScreen
 import com.example.turtlewowcompanion.ui.screens.quests.QuestDetailScreen
 import com.example.turtlewowcompanion.ui.screens.quests.QuestListScreen
 import com.example.turtlewowcompanion.ui.screens.races.RaceDetailScreen
@@ -41,6 +42,9 @@ private const val ANIM = 350
 fun NavGraph(
     navController: NavHostController,
     container: AppContainer,
+    userId: Long = 0,
+    username: String = "",
+    onLogout: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     NavHost(
@@ -300,6 +304,14 @@ fun NavGraph(
                     "ITEM" -> navController.navigate(Screen.ItemDetail.createRoute(refId))
                 }
             })
+        }
+        composable(Screen.Profile.route) {
+            ProfileScreen(
+                userId = userId,
+                username = username,
+                container = container,
+                onLogout = onLogout
+            )
         }
         composable(Screen.Settings.route) {
             SettingsScreen(container = container)

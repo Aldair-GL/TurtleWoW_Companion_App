@@ -13,6 +13,7 @@ import com.example.turtlewowcompanion.data.repository.QuestRepository
 import com.example.turtlewowcompanion.data.repository.RaceRepository
 import com.example.turtlewowcompanion.data.repository.SearchRepository
 import com.example.turtlewowcompanion.data.repository.SettingsRepository
+import com.example.turtlewowcompanion.data.repository.UserRepository
 import com.example.turtlewowcompanion.data.repository.WowClassRepository
 import com.example.turtlewowcompanion.data.repository.ZoneRepository
 import com.example.turtlewowcompanion.data.repository.dataStore
@@ -36,4 +37,9 @@ class AppContainer(context: Context) {
     val favoriteRepository: FavoriteRepository = FavoriteRepository(database.favoriteDao())
     val searchRepository: SearchRepository = SearchRepository(api, database.searchHistoryDao(), database.zoneDao())
     val settingsRepository: SettingsRepository = SettingsRepository(context.dataStore)
+    val userRepository: UserRepository = UserRepository(
+        database.userProfileDao(),
+        database.userCharacterDao(),
+        database.dungeonProgressDao()
+    )
 }

@@ -4,26 +4,8 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import com.example.turtlewowcompanion.data.local.dao.BossDao
-import com.example.turtlewowcompanion.data.local.dao.ClassDao
-import com.example.turtlewowcompanion.data.local.dao.FavoriteDao
-import com.example.turtlewowcompanion.data.local.dao.ItemDao
-import com.example.turtlewowcompanion.data.local.dao.NpcDao
-import com.example.turtlewowcompanion.data.local.dao.ProfessionDao
-import com.example.turtlewowcompanion.data.local.dao.QuestDao
-import com.example.turtlewowcompanion.data.local.dao.RaceDao
-import com.example.turtlewowcompanion.data.local.dao.SearchHistoryDao
-import com.example.turtlewowcompanion.data.local.dao.ZoneDao
-import com.example.turtlewowcompanion.data.local.entity.BossCacheEntity
-import com.example.turtlewowcompanion.data.local.entity.ClassCacheEntity
-import com.example.turtlewowcompanion.data.local.entity.FavoriteEntity
-import com.example.turtlewowcompanion.data.local.entity.ItemCacheEntity
-import com.example.turtlewowcompanion.data.local.entity.NpcCacheEntity
-import com.example.turtlewowcompanion.data.local.entity.ProfessionCacheEntity
-import com.example.turtlewowcompanion.data.local.entity.QuestCacheEntity
-import com.example.turtlewowcompanion.data.local.entity.RaceCacheEntity
-import com.example.turtlewowcompanion.data.local.entity.SearchHistoryEntity
-import com.example.turtlewowcompanion.data.local.entity.ZoneCacheEntity
+import com.example.turtlewowcompanion.data.local.dao.*
+import com.example.turtlewowcompanion.data.local.entity.*
 
 @Database(
     entities = [
@@ -36,9 +18,12 @@ import com.example.turtlewowcompanion.data.local.entity.ZoneCacheEntity
         ItemCacheEntity::class,
         BossCacheEntity::class,
         RaceCacheEntity::class,
-        ClassCacheEntity::class
+        ClassCacheEntity::class,
+        UserProfileEntity::class,
+        UserCharacterEntity::class,
+        DungeonProgressEntity::class
     ],
-    version = 5,
+    version = 6,
     exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {
@@ -52,6 +37,9 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun bossDao(): BossDao
     abstract fun raceDao(): RaceDao
     abstract fun classDao(): ClassDao
+    abstract fun userProfileDao(): UserProfileDao
+    abstract fun userCharacterDao(): UserCharacterDao
+    abstract fun dungeonProgressDao(): DungeonProgressDao
 
     companion object {
         @Volatile

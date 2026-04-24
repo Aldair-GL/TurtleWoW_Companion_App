@@ -141,6 +141,9 @@
 - [ ] `img_cat_professions.webp` — Categoría home profesiones
 - [ ] `img_cat_items.webp` — Categoría home objetos
 
+## PANTALLA DE LOGIN (opcional)
+- [ ] `img_auth_background.webp` — Fondo para pantalla de login (1080x1920, paisaje épico WoW)
+
 ---
 
 ## Resumen de pendientes
@@ -155,5 +158,5 @@
 | NPCs | 6 | 0 |
 | Profesiones | 0 | 12 |
 | Categorías home | 3 | 2 opcionales |
-| **TOTAL** | **40** | **~65** |
-
+| Login | 0 | 1 opcional |
+| **TOTAL** | **40** | **~66** |

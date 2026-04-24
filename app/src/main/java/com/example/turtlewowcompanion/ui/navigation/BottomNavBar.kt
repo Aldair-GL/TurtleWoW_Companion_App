@@ -4,6 +4,7 @@ import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Search
@@ -32,6 +33,7 @@ val bottomNavItems = listOf(
     BottomNavItem("Inicio", Icons.Default.Home, Screen.Home.route),
     BottomNavItem("Buscar", Icons.Default.Search, Screen.Search.route),
     BottomNavItem("Favoritos", Icons.Default.Favorite, Screen.Favorites.route),
+    BottomNavItem("Perfil", Icons.Default.AccountCircle, Screen.Profile.route),
     BottomNavItem("Ajustes", Icons.Default.Settings, Screen.Settings.route)
 )
 
@@ -87,4 +89,3 @@ fun BottomNavBar(
         }
     }
 }
-
