@@ -1,5 +1,6 @@
 package com.example.turtlewowcompanion.data.remote
 
+import com.example.turtlewowcompanion.data.remote.dto.AuthRequestDto
 import com.example.turtlewowcompanion.data.remote.dto.BossDto
 import com.example.turtlewowcompanion.data.remote.dto.FactionDto
 import com.example.turtlewowcompanion.data.remote.dto.ItemDto
@@ -9,8 +10,10 @@ import com.example.turtlewowcompanion.data.remote.dto.ProfessionDto
 import com.example.turtlewowcompanion.data.remote.dto.QuestDto
 import com.example.turtlewowcompanion.data.remote.dto.RaceDto
 import com.example.turtlewowcompanion.data.remote.dto.SearchResultDto
+import com.example.turtlewowcompanion.data.remote.dto.UserDto
 import com.example.turtlewowcompanion.data.remote.dto.WowClassDto
 import com.example.turtlewowcompanion.data.remote.dto.ZoneDto
+import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
@@ -93,6 +96,13 @@ interface TurtleWowApi {
     // ── Búsqueda ──────────────────────────────────────────────────────────
     @GET("api/search")
     suspend fun search(@Query("q") query: String): List<SearchResultDto>
+
+    // ── Autenticación ──────────────────────────────────────────────────
+    @retrofit2.http.POST("api/v1/auth/register")
+    suspend fun register(@Body request: AuthRequestDto): UserDto
+
+    @retrofit2.http.POST("api/v1/auth/login")
+    suspend fun login(@Body request: AuthRequestDto): UserDto
 
     // ── Endpoints legacy ─────────────────────────────────────────────────
     @GET("api/quests")

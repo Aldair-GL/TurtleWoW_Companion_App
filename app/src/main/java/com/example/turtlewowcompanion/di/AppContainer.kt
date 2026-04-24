@@ -40,6 +40,7 @@ class AppContainer(context: Context) {
     val userRepository: UserRepository = UserRepository(
         database.userProfileDao(),
         database.userCharacterDao(),
-        database.dungeonProgressDao()
+        database.dungeonProgressDao(),
+        api
     )
 }

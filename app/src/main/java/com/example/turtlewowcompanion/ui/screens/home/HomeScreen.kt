@@ -178,7 +178,7 @@ fun HomeScreen(
                 .fillMaxWidth()
                 .padding(horizontal = 20.dp)
         )
-        Spacer(modifier = Modifier.height(100.dp))
+        Spacer(modifier = Modifier.height(24.dp))
     }
 }
 
@@ -250,3 +250,4 @@ private fun HomeCategoryCardEnhanced(
         }
     }
 }
+

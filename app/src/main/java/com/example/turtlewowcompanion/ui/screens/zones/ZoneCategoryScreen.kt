@@ -40,6 +40,8 @@ fun ZoneCategoryScreen(
     container: AppContainer,
     zoneType: String,
     title: String,
+    continent: String? = null,
+    factionFilter: String? = null,
     onZoneClick: (Long) -> Unit,
     onBack: () -> Unit,
     viewModel: ZoneViewModel = viewModel(factory = ZoneViewModel.Factory(container.zoneRepository))
@@ -71,7 +73,13 @@ fun ZoneCategoryScreen(
                 modifier = Modifier.padding(padding)
             )
             is UiState.Success -> {
-                val filtered = s.data.filter { it.zoneType == zoneType }
+                val filtered = s.data.filter { zone ->
+                    val typeMatch = zone.zoneType == zoneType
+                    val continentMatch = continent == null || zone.continent == continent
+                    val factionMatch = factionFilter == null ||
+                        zone.faction.contains(factionFilter, ignoreCase = true)
+                    typeMatch && continentMatch && factionMatch
+                }
                 LazyColumn(
                     modifier = Modifier.fillMaxSize().padding(padding),
                     contentPadding = PaddingValues(16.dp),
@@ -101,4 +109,3 @@ fun ZoneCategoryScreen(
         }
     }
 }
-

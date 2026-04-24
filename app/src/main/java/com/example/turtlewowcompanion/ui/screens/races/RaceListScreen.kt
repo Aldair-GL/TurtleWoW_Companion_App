@@ -1,9 +1,6 @@
 package com.example.turtlewowcompanion.ui.screens.races
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
@@ -33,6 +30,9 @@ import com.example.turtlewowcompanion.ui.common.WowCardEnhanced
 import com.example.turtlewowcompanion.ui.common.racePortraitRes
 import com.example.turtlewowcompanion.ui.theme.DarkBackground
 import com.example.turtlewowcompanion.ui.theme.GlassSurface
+import com.example.turtlewowcompanion.ui.theme.AllianceBlue
+import com.example.turtlewowcompanion.ui.theme.HordeRed
+import com.example.turtlewowcompanion.ui.theme.WowGold
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -69,6 +69,9 @@ fun RaceListScreen(
                 modifier = Modifier.padding(padding)
             )
             is UiState.Success -> {
+                val alliance = s.data.filter { it.factionName.contains("Alliance", ignoreCase = true) }
+                val horde = s.data.filter { it.factionName.contains("Horde", ignoreCase = true) }
+
                 LazyColumn(
                     modifier = Modifier.fillMaxSize().padding(padding),
                     contentPadding = PaddingValues(16.dp),
@@ -83,7 +86,29 @@ fun RaceListScreen(
                             height = 140.dp
                         )
                     }
-                    items(s.data, key = { it.id }) { race ->
+
+                    // Alianza
+                    item {
+                        Spacer(Modifier.height(4.dp))
+                        Text("Alianza", style = MaterialTheme.typography.titleMedium, color = AllianceBlue)
+                    }
+                    items(alliance, key = { it.id }) { race ->
+                        WowCardEnhanced(
+                            title = race.name,
+                            subtitle = race.factionName,
+                            backgroundBrush = ThemeBrushes.quests,
+                            imageRes = racePortraitRes(race.name),
+                            faction = race.factionName,
+                            onClick = { onRaceClick(race.id) }
+                        )
+                    }
+
+                    // Horda
+                    item {
+                        Spacer(Modifier.height(4.dp))
+                        Text("Horda", style = MaterialTheme.typography.titleMedium, color = HordeRed)
+                    }
+                    items(horde, key = { it.id }) { race ->
                         WowCardEnhanced(
                             title = race.name,
                             subtitle = race.factionName,

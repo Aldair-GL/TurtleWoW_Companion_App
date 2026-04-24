@@ -81,47 +81,95 @@ fun NavGraph(
             popExitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Right, tween(ANIM)) }
         ) {
             ZoneListScreen(
-                onNavigateToCities = { navController.navigate(Screen.ZoneCities.route) },
-                onNavigateToDungeons = { navController.navigate(Screen.ZoneDungeons.route) },
-                onNavigateToOpenWorld = { navController.navigate(Screen.ZoneOpenWorld.route) },
+                onNavigateToCitiesAlliance = { navController.navigate(Screen.ZoneCitiesAlliance.route) },
+                onNavigateToCitiesHorde = { navController.navigate(Screen.ZoneCitiesHorde.route) },
+                onNavigateToDungeonsEK = { navController.navigate(Screen.ZoneDungeonsEK.route) },
+                onNavigateToDungeonsKalimdor = { navController.navigate(Screen.ZoneDungeonsKalimdor.route) },
+                onNavigateToOpenWorldEK = { navController.navigate(Screen.ZoneOpenWorldEK.route) },
+                onNavigateToOpenWorldKalimdor = { navController.navigate(Screen.ZoneOpenWorldKalimdor.route) },
                 onBack = { navController.popBackStack() }
             )
         }
 
-        // Mundo abierto
+        // Mundo abierto — Reinos del Este
         composable(
-            route = Screen.ZoneOpenWorld.route,
+            route = Screen.ZoneOpenWorldEK.route,
             enterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Left, tween(ANIM)) },
             popExitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Right, tween(ANIM)) }
         ) {
             ZoneCategoryScreen(
-                container = container, zoneType = "OPEN_WORLD", title = "Mundo abierto",
+                container = container, zoneType = "OPEN_WORLD", title = "Reinos del Este",
+                continent = "EASTERN_KINGDOMS",
                 onZoneClick = { navController.navigate(Screen.ZoneDetail.createRoute(it)) },
                 onBack = { navController.popBackStack() }
             )
         }
 
-        // Ciudades
+        // Mundo abierto — Kalimdor
         composable(
-            route = Screen.ZoneCities.route,
+            route = Screen.ZoneOpenWorldKalimdor.route,
             enterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Left, tween(ANIM)) },
             popExitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Right, tween(ANIM)) }
         ) {
             ZoneCategoryScreen(
-                container = container, zoneType = "CITY", title = "Ciudades",
+                container = container, zoneType = "OPEN_WORLD", title = "Kalimdor",
+                continent = "KALIMDOR",
                 onZoneClick = { navController.navigate(Screen.ZoneDetail.createRoute(it)) },
                 onBack = { navController.popBackStack() }
             )
         }
 
-        // Mazmorras
+        // Ciudades Alianza
         composable(
-            route = Screen.ZoneDungeons.route,
+            route = Screen.ZoneCitiesAlliance.route,
             enterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Left, tween(ANIM)) },
             popExitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Right, tween(ANIM)) }
         ) {
             ZoneCategoryScreen(
-                container = container, zoneType = "DUNGEON", title = "Mazmorras",
+                container = container, zoneType = "CITY", title = "Ciudades de la Alianza",
+                factionFilter = "Alliance",
+                onZoneClick = { navController.navigate(Screen.ZoneDetail.createRoute(it)) },
+                onBack = { navController.popBackStack() }
+            )
+        }
+
+        // Ciudades Horda
+        composable(
+            route = Screen.ZoneCitiesHorde.route,
+            enterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Left, tween(ANIM)) },
+            popExitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Right, tween(ANIM)) }
+        ) {
+            ZoneCategoryScreen(
+                container = container, zoneType = "CITY", title = "Ciudades de la Horda",
+                factionFilter = "Horde",
+                onZoneClick = { navController.navigate(Screen.ZoneDetail.createRoute(it)) },
+                onBack = { navController.popBackStack() }
+            )
+        }
+
+        // Mazmorras — Reinos del Este
+        composable(
+            route = Screen.ZoneDungeonsEK.route,
+            enterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Left, tween(ANIM)) },
+            popExitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Right, tween(ANIM)) }
+        ) {
+            ZoneCategoryScreen(
+                container = container, zoneType = "DUNGEON", title = "Mazmorras — Reinos del Este",
+                continent = "EASTERN_KINGDOMS",
+                onZoneClick = { navController.navigate(Screen.ZoneDetail.createRoute(it)) },
+                onBack = { navController.popBackStack() }
+            )
+        }
+
+        // Mazmorras — Kalimdor
+        composable(
+            route = Screen.ZoneDungeonsKalimdor.route,
+            enterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Left, tween(ANIM)) },
+            popExitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Right, tween(ANIM)) }
+        ) {
+            ZoneCategoryScreen(
+                container = container, zoneType = "DUNGEON", title = "Mazmorras — Kalimdor",
+                continent = "KALIMDOR",
                 onZoneClick = { navController.navigate(Screen.ZoneDetail.createRoute(it)) },
                 onBack = { navController.popBackStack() }
             )

@@ -7,9 +7,12 @@ sealed class Screen(val route: String) {
 
     // Zonas — navegación jerárquica
     data object ZoneList : Screen("zones")
-    data object ZoneCities : Screen("zones/cities")
-    data object ZoneDungeons : Screen("zones/dungeons")
-    data object ZoneOpenWorld : Screen("zones/openworld")
+    data object ZoneCitiesAlliance : Screen("zones/cities/alliance")
+    data object ZoneCitiesHorde : Screen("zones/cities/horde")
+    data object ZoneDungeonsEK : Screen("zones/dungeons/ek")
+    data object ZoneDungeonsKalimdor : Screen("zones/dungeons/kalimdor")
+    data object ZoneOpenWorldEK : Screen("zones/openworld/ek")
+    data object ZoneOpenWorldKalimdor : Screen("zones/openworld/kalimdor")
     data object ZoneDetail : Screen("zones/{id}") {
         fun createRoute(id: Long) = "zones/$id"
     }
@@ -32,7 +35,6 @@ sealed class Screen(val route: String) {
         fun createRoute(id: Long) = "classes/$id"
     }
 
-    // Rutas legacy (mantenidas para favoritos/búsqueda)
     data object QuestList : Screen("quests")
     data object QuestDetail : Screen("quests/{id}") {
         fun createRoute(id: Long) = "quests/$id"
@@ -49,13 +51,11 @@ sealed class Screen(val route: String) {
     data object Favorites : Screen("favorites")
     data object Settings : Screen("settings")
 
-    // Profesiones
     data object ProfessionList : Screen("professions")
     data object ProfessionDetail : Screen("professions/{id}") {
         fun createRoute(id: Long) = "professions/$id"
     }
 
-    // Items (objetos)
     data object ItemList : Screen("items")
     data object ItemDetail : Screen("items/{id}") {
         fun createRoute(id: Long) = "items/$id"
