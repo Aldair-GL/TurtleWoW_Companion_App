@@ -44,37 +44,33 @@ fun SplashScreen(onFinished: () -> Unit) {
         onFinished()
     }
 
-    SplashContent(alphaAnim)
-}
-
-@Composable
-private fun SplashContent(alphaValue: Float) {
     Box(
         modifier = Modifier
             .fillMaxSize()
             .background(DarkBackground),
         contentAlignment = Alignment.Center
     ) {
-        // Fondo hero
+        // Fondo hero sutil
         Image(
             painter = painterResource(R.drawable.img_hero_home),
             contentDescription = null,
             contentScale = ContentScale.Crop,
             modifier = Modifier
                 .fillMaxSize()
-                .alpha(0.3f)
+                .alpha(0.2f)
         )
 
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.alpha(alphaValue)
+            modifier = Modifier.alpha(alphaAnim)
         ) {
+            // Icono del escudo personalizado
             Image(
                 painter = painterResource(R.drawable.ic_launcher_foreground),
                 contentDescription = "Logo",
-                modifier = Modifier.size(120.dp)
+                modifier = Modifier.size(140.dp)
             )
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(12.dp))
             Text(
                 text = "Turtle WoW",
                 style = MaterialTheme.typography.displayLarge,
@@ -89,4 +85,3 @@ private fun SplashContent(alphaValue: Float) {
         }
     }
 }
-

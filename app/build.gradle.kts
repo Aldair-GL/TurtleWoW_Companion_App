@@ -17,13 +17,16 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-
-        // Emulador: 10.0.2.2. En movil fisico cambia esta URL por la IP local del PC.
-        buildConfigField("String", "BASE_URL", "\"http://10.0.2.2:8084/\"")
     }
 
     buildTypes {
+        debug {
+            // Emulador local
+            buildConfigField("String", "BASE_URL", "\"http://10.0.2.2:8084/\"")
+        }
         release {
+            // Producción (Render)
+            buildConfigField("String", "BASE_URL", "\"https://turtlewow-companion-api.onrender.com/\"")
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),

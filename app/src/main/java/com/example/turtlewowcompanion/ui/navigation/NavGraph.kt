@@ -189,7 +189,8 @@ fun NavGraph(
                 onBack = { navController.popBackStack() },
                 onNavigateToBosses = { zoneId ->
                     navController.navigate(Screen.BossList.createRoute(zoneId))
-                }
+                },
+                userId = userId
             )
         }
 

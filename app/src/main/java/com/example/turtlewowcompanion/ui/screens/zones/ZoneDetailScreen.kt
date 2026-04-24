@@ -10,6 +10,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material3.Button
@@ -18,6 +19,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -46,8 +48,9 @@ import com.example.turtlewowcompanion.ui.common.ShimmerLoadingScreen
 import com.example.turtlewowcompanion.ui.common.UiState
 import com.example.turtlewowcompanion.ui.common.WowDivider
 import com.example.turtlewowcompanion.ui.theme.DarkBackground
-import com.example.turtlewowcompanion.ui.theme.GlassSurface
 import com.example.turtlewowcompanion.ui.theme.FactionThemeProvider
+import com.example.turtlewowcompanion.ui.theme.FelGreen
+import com.example.turtlewowcompanion.ui.theme.GlassSurface
 import com.example.turtlewowcompanion.ui.theme.LocalFactionColors
 import kotlinx.coroutines.launch
 
@@ -58,15 +61,20 @@ fun ZoneDetailScreen(
     container: AppContainer,
     onBack: () -> Unit,
     onNavigateToBosses: ((Long) -> Unit)? = null,
+    userId: Long = 0,
     viewModel: ZoneViewModel = viewModel(factory = ZoneViewModel.Factory(container.zoneRepository))
 ) {
     val state by viewModel.zoneDetailState.collectAsState()
     val scope = rememberCoroutineScope()
     var isFavorite by remember { mutableStateOf(false) }
+    var isDungeonCompleted by remember { mutableStateOf(false) }
 
     LaunchedEffect(zoneId) {
         viewModel.loadZoneById(zoneId)
         isFavorite = container.favoriteRepository.isFavorite(zoneId, FavoriteType.ZONE)
+        if (userId > 0) {
+            isDungeonCompleted = container.userRepository.isDungeonCompleted(userId, zoneId)
+        }
     }
 
     Scaffold(
@@ -158,7 +166,7 @@ fun ZoneDetailScreen(
                                 color = MaterialTheme.colorScheme.onSurface
                             )
 
-                            // Botón "Ver jefes" solo para mazmorras y raids
+                            // Botón "Ver jefes" para mazmorras y raids
                             if (zone.zoneType in listOf("DUNGEON", "RAID") && onNavigateToBosses != null) {
                                 Spacer(modifier = Modifier.height(20.dp))
                                 Button(
@@ -171,6 +179,39 @@ fun ZoneDetailScreen(
                                 ) {
                                     Text("Ver jefes de mazmorra")
                                 }
+
+                                // Botón "Marcar como completada"
+                                if (userId > 0) {
+                                    Spacer(modifier = Modifier.height(12.dp))
+                                    if (isDungeonCompleted) {
+                                        OutlinedButton(
+                                            onClick = {
+                                                scope.launch {
+                                                    container.userRepository.toggleDungeonCompletion(userId, zone.id, zone.name)
+                                                    isDungeonCompleted = false
+                                                }
+                                            },
+                                            modifier = Modifier.fillMaxWidth(),
+                                            colors = ButtonDefaults.outlinedButtonColors(contentColor = FelGreen)
+                                        ) {
+                                            Icon(Icons.Default.CheckCircle, contentDescription = null, tint = FelGreen)
+                                            Spacer(modifier = Modifier.height(4.dp))
+                                            Text("  Completada ✓", color = FelGreen)
+                                        }
+                                    } else {
+                                        OutlinedButton(
+                                            onClick = {
+                                                scope.launch {
+                                                    container.userRepository.toggleDungeonCompletion(userId, zone.id, zone.name)
+                                                    isDungeonCompleted = true
+                                                }
+                                            },
+                                            modifier = Modifier.fillMaxWidth()
+                                        ) {
+                                            Text("Marcar como completada")
+                                        }
+                                    }
+                                }
                             }
                         }
                     }
@@ -179,6 +220,3 @@ fun ZoneDetailScreen(
         }
     }
 }
-
-
-

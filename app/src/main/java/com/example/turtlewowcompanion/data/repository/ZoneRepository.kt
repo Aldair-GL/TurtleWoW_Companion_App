@@ -18,7 +18,7 @@ class ZoneRepository(
     fun getZones(): Flow<UiState<List<Zone>>> = flow {
         emit(UiState.Loading)
         try {
-            val response = api.getZones(page = 0, size = 50)
+            val response = api.getZones(page = 0, size = 200)
             val zones = response.content
             zoneDao.upsertAll(zones.map { it.toEntity() })
             zoneDao.observeAll().collect { entities ->

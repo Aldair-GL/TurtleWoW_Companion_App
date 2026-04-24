@@ -126,9 +126,15 @@ class UserRepository(
     suspend fun getCompletedCount(userId: Long): Int =
         dungeonProgressDao.countCompleted(userId)
 
+    suspend fun isDungeonCompleted(userId: Long, zoneId: Long): Boolean {
+        val entry = dungeonProgressDao.getByUserAndZone(userId, zoneId)
+        return entry?.completed == true
+    }
+
     private fun hashPassword(password: String): String {
         val digest = MessageDigest.getInstance("SHA-256")
         val hashBytes = digest.digest(password.toByteArray())
         return hashBytes.joinToString("") { "%02x".format(it) }
     }
 }
+
