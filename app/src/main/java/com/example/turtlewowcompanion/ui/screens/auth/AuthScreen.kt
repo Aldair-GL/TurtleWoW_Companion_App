@@ -201,17 +201,38 @@ fun AuthScreen(
                         shape = RoundedCornerShape(12.dp)
                     ) {
                         if (state.isLoading) {
-                            CircularProgressIndicator(
-                                modifier = Modifier.size(20.dp),
-                                color = DarkBackground,
-                                strokeWidth = 2.dp
-                            )
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.Center
+                            ) {
+                                CircularProgressIndicator(
+                                    modifier = Modifier.size(20.dp),
+                                    color = DarkBackground,
+                                    strokeWidth = 2.dp
+                                )
+                                Spacer(Modifier.width(12.dp))
+                                Text(
+                                    text = "Conectando…",
+                                    style = MaterialTheme.typography.titleMedium
+                                )
+                            }
                         } else {
                             Text(
                                 text = if (state.isRegisterMode) "Registrarse" else "Entrar",
                                 style = MaterialTheme.typography.titleMedium
                             )
                         }
+                    }
+
+                    if (state.isLoading) {
+                        Spacer(Modifier.height(8.dp))
+                        Text(
+                            text = "El servidor puede tardar hasta un minuto en despertar la primera vez.",
+                            color = WowGold.copy(alpha = 0.7f),
+                            style = MaterialTheme.typography.bodySmall,
+                            textAlign = TextAlign.Center,
+                            modifier = Modifier.fillMaxWidth()
+                        )
                     }
 
                     Spacer(Modifier.height(12.dp))
@@ -231,4 +252,5 @@ fun AuthScreen(
         }
     }
 }
+
 

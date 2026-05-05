@@ -21,11 +21,14 @@ android {
 
     buildTypes {
         debug {
-            // Emulador local
+            // Backend en local (puerto 8084).
+            //   - Emulador AVD:           http://10.0.2.2:8084/
+            //   - Dispositivo físico:     http://<IP-LAN-de-la-PC>:8084/  (cambiar a mano)
+            // Para apuntar a Render desde debug, comentar la línea de abajo y descomentar la siguiente.
             buildConfigField("String", "BASE_URL", "\"http://10.0.2.2:8084/\"")
+            // buildConfigField("String", "BASE_URL", "\"https://turtlewow-companion-api.onrender.com/\"")
         }
         release {
-            // Producción (Render)
             buildConfigField("String", "BASE_URL", "\"https://turtlewow-companion-api.onrender.com/\"")
             isMinifyEnabled = false
             proguardFiles(

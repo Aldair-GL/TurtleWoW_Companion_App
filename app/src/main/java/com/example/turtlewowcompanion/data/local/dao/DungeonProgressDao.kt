@@ -23,5 +23,9 @@ interface DungeonProgressDao {
 
     @Query("SELECT COUNT(*) FROM dungeon_progress WHERE userId = :userId AND completed = 1")
     suspend fun countCompleted(userId: Long): Int
+
+    @Query("DELETE FROM dungeon_progress WHERE userId = :userId")
+    suspend fun deleteAllForUser(userId: Long)
 }
+
 

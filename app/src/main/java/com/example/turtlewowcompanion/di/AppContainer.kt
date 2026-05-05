@@ -41,6 +41,8 @@ class AppContainer(context: Context) {
         database.userProfileDao(),
         database.userCharacterDao(),
         database.dungeonProgressDao(),
+        database.bossKillProgressDao(),
+        database.lootProgressDao(),
         api
     )
 }

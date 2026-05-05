@@ -28,6 +28,8 @@ class AuthViewModel(private val userRepository: UserRepository) : ViewModel() {
             val result = userRepository.login(username, password)
             result.fold(
                 onSuccess = { user ->
+                    // Sincronizamos en background el tracking del usuario con el backend.
+                    launch { userRepository.pullForUser(user.id) }
                     _state.value = _state.value.copy(
                         isLoading = false,
                         loggedInUserId = user.id,
@@ -47,6 +49,7 @@ class AuthViewModel(private val userRepository: UserRepository) : ViewModel() {
             val result = userRepository.register(username, password)
             result.fold(
                 onSuccess = { userId ->
+                    launch { userRepository.pullForUser(userId) }
                     _state.value = _state.value.copy(
                         isLoading = false,
                         loggedInUserId = userId,
@@ -80,4 +83,5 @@ class AuthViewModel(private val userRepository: UserRepository) : ViewModel() {
         override fun <T : ViewModel> create(modelClass: Class<T>): T = AuthViewModel(userRepository) as T
     }
 }
+
 

@@ -21,9 +21,11 @@ import com.example.turtlewowcompanion.data.local.entity.*
         ClassCacheEntity::class,
         UserProfileEntity::class,
         UserCharacterEntity::class,
-        DungeonProgressEntity::class
+        DungeonProgressEntity::class,
+        BossKillProgressEntity::class,
+        LootProgressEntity::class
     ],
-    version = 6,
+    version = 7,
     exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {
@@ -40,6 +42,8 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun userProfileDao(): UserProfileDao
     abstract fun userCharacterDao(): UserCharacterDao
     abstract fun dungeonProgressDao(): DungeonProgressDao
+    abstract fun bossKillProgressDao(): BossKillProgressDao
+    abstract fun lootProgressDao(): LootProgressDao
 
     companion object {
         @Volatile

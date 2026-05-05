@@ -14,6 +14,9 @@ interface UserCharacterDao {
     @Query("SELECT * FROM user_characters WHERE userId = :userId ORDER BY createdAt DESC")
     fun observeByUser(userId: Long): Flow<List<UserCharacterEntity>>
 
+    @Query("SELECT COUNT(*) FROM user_characters WHERE userId = :userId")
+    suspend fun countByUser(userId: Long): Int
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(character: UserCharacterEntity): Long
 
@@ -25,5 +28,10 @@ interface UserCharacterDao {
 
     @Query("DELETE FROM user_characters WHERE id = :id")
     suspend fun deleteById(id: Long)
+
+    @Query("DELETE FROM user_characters WHERE userId = :userId")
+    suspend fun deleteAllForUser(userId: Long)
 }
+
+
 

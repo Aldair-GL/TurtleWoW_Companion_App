@@ -15,9 +15,11 @@ class ZoneMapperTest {
             id = 1L,
             name = "Elwynn Forest",
             description = "Starting zone for Humans",
-            level = "1-10",
-            faction = "Alliance",
-            imageUrl = "http://example.com/elwynn.png"
+            minLevel = 1,
+            maxLevel = 10,
+            continent = "EASTERN_KINGDOMS",
+            zoneType = "OPEN_WORLD",
+            factionName = "Alliance"
         )
 
         val domain = dto.toDomain()
@@ -25,9 +27,11 @@ class ZoneMapperTest {
         assertEquals(1L, domain.id)
         assertEquals("Elwynn Forest", domain.name)
         assertEquals("Starting zone for Humans", domain.description)
+        assertEquals(1, domain.minLevel)
+        assertEquals(10, domain.maxLevel)
+        assertEquals("Alliance", domain.factionName)
+        assertEquals("Reinos del Este", domain.continentLabel)
         assertEquals("1-10", domain.level)
-        assertEquals("Alliance", domain.faction)
-        assertEquals("http://example.com/elwynn.png", domain.imageUrl)
     }
 
     @Test
@@ -36,17 +40,19 @@ class ZoneMapperTest {
             id = 2L,
             name = "The Barrens",
             description = "Vast Horde territory",
-            level = "10-25",
-            faction = "Horde",
-            imageUrl = null
+            minLevel = 10,
+            maxLevel = 25,
+            continent = "KALIMDOR",
+            zoneType = "OPEN_WORLD",
+            factionName = "Horde"
         )
 
         val entity = dto.toEntity()
 
         assertEquals(2L, entity.id)
         assertEquals("The Barrens", entity.name)
-        assertEquals("Horde", entity.faction)
-        assertEquals(null, entity.imageUrl)
+        assertEquals("Horde", entity.factionName)
+        assertEquals("KALIMDOR", entity.continent)
     }
 
     @Test
@@ -55,9 +61,11 @@ class ZoneMapperTest {
             id = 3L,
             name = "Stranglethorn Vale",
             description = "Dangerous jungle",
-            level = "30-45",
-            faction = "Neutral",
-            imageUrl = "http://example.com/stv.png"
+            minLevel = 30,
+            maxLevel = 45,
+            continent = "EASTERN_KINGDOMS",
+            zoneType = "OPEN_WORLD",
+            factionName = null
         )
 
         val domain = entity.toDomain()
@@ -69,6 +77,4 @@ class ZoneMapperTest {
         assertEquals("Neutral", domain.faction)
     }
 }
-
-
 

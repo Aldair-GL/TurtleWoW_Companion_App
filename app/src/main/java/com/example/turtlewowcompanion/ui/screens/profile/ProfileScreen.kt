@@ -31,10 +31,21 @@ fun ProfileScreen(
 ) {
     val characters by viewModel.characters.collectAsState()
     val dungeonProgress by viewModel.dungeonProgress.collectAsState()
-    val completedCount by viewModel.completedCount.collectAsState()
+    val bossKills by viewModel.bossKills.collectAsState()
+    val completedCount by viewModel.completedDungeons.collectAsState()
+    val bossKillCount by viewModel.bossKillCount.collectAsState()
+    val errorMessage by viewModel.errorMessage.collectAsState()
     var showAddDialog by remember { mutableStateOf(false) }
+    val snackbarHostState = remember { SnackbarHostState() }
 
     LaunchedEffect(userId) { viewModel.loadForUser(userId) }
+
+    LaunchedEffect(errorMessage) {
+        errorMessage?.let {
+            snackbarHostState.showSnackbar(it)
+            viewModel.clearError()
+        }
+    }
 
     Scaffold(
         topBar = {
@@ -51,6 +62,7 @@ fun ProfileScreen(
                 )
             )
         },
+        snackbarHost = { SnackbarHost(snackbarHostState) },
         containerColor = DarkBackground
     ) { padding ->
         LazyColumn(
@@ -75,7 +87,7 @@ fun ProfileScreen(
                         Column {
                             Text(username, style = MaterialTheme.typography.headlineSmall, color = WowGold)
                             Text(
-                                "${characters.size} personajes · $completedCount mazmorras completadas",
+                                "${characters.size}/${viewModel.maxCharacters} personajes · $completedCount mazmorras · $bossKillCount jefes",
                                 style = MaterialTheme.typography.bodySmall,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
@@ -92,9 +104,16 @@ fun ProfileScreen(
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text("Mis personajes", style = MaterialTheme.typography.titleMedium, color = WowGold)
-                    IconButton(onClick = { showAddDialog = true }) {
-                        Icon(Icons.Default.Add, contentDescription = "Añadir personaje", tint = WowGold)
+                    Text("Mis personajes (${characters.size}/${viewModel.maxCharacters})", style = MaterialTheme.typography.titleMedium, color = WowGold)
+                    IconButton(
+                        onClick = { showAddDialog = true },
+                        enabled = characters.size < viewModel.maxCharacters
+                    ) {
+                        Icon(
+                            Icons.Default.Add,
+                            contentDescription = "Añadir personaje",
+                            tint = if (characters.size < viewModel.maxCharacters) WowGold else WowGold.copy(alpha = 0.3f)
+                        )
                     }
                 }
             }
@@ -133,7 +152,7 @@ fun ProfileScreen(
                                     color = MaterialTheme.colorScheme.onSurfaceVariant
                                 )
                             }
-                            IconButton(onClick = { viewModel.deleteCharacter(char.id) }) {
+                            IconButton(onClick = { viewModel.deleteCharacter(userId, char.id) }) {
                                 Icon(Icons.Default.Delete, contentDescription = "Eliminar", tint = HordeRed.copy(alpha = 0.7f))
                             }
                         }
@@ -146,17 +165,17 @@ fun ProfileScreen(
                 Spacer(Modifier.height(8.dp))
                 WowDivider()
                 Spacer(Modifier.height(8.dp))
-                Text("Progreso de mazmorras", style = MaterialTheme.typography.titleMedium, color = WowGold)
+                Text("Mazmorras completadas ($completedCount)", style = MaterialTheme.typography.titleMedium, color = WowGold)
                 Spacer(Modifier.height(4.dp))
                 Text(
-                    "Marca las mazmorras que has completado desde el detalle de cada mazmorra.",
+                    "Marca las mazmorras como completadas desde su pantalla de detalle.",
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
 
             if (dungeonProgress.isNotEmpty()) {
-                items(dungeonProgress, key = { it.id }) { dp ->
+                items(dungeonProgress, key = { "dg-${it.id}" }) { dp ->
                     GlassCard(modifier = Modifier.fillMaxWidth(), accentColor = if (dp.completed) FelGreen else GlassBorder) {
                         Row(
                             modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp),
@@ -189,6 +208,61 @@ fun ProfileScreen(
                     }
                 }
             }
+
+            // Sección jefes derrotados
+            item {
+                Spacer(Modifier.height(8.dp))
+                WowDivider()
+                Spacer(Modifier.height(8.dp))
+                Text("Jefes derrotados ($bossKillCount)", style = MaterialTheme.typography.titleMedium, color = WowGold)
+                Spacer(Modifier.height(4.dp))
+                Text(
+                    "Marca los jefes derrotados desde su pantalla de detalle.",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
+
+            if (bossKills.isNotEmpty()) {
+                items(bossKills, key = { "bk-${it.id}" }) { bk ->
+                    GlassCard(modifier = Modifier.fillMaxWidth(), accentColor = HordeRed) {
+                        Row(
+                            modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Icon(
+                                Icons.Default.Whatshot,
+                                contentDescription = null,
+                                tint = HordeRed,
+                                modifier = Modifier.size(24.dp)
+                            )
+                            Spacer(Modifier.width(12.dp))
+                            Column(modifier = Modifier.weight(1f)) {
+                                Text(bk.bossName, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurface)
+                                Text(
+                                    bk.zoneName,
+                                    style = MaterialTheme.typography.labelSmall,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                                )
+                            }
+                        }
+                    }
+                }
+            } else {
+                item {
+                    GlassCard(modifier = Modifier.fillMaxWidth()) {
+                        Text(
+                            "Entra en un jefe y márcalo como derrotado.",
+                            modifier = Modifier.padding(20.dp),
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+                }
+            }
+
+            // Sección loot conseguido — eliminada por simplificación.
+            // El loot se considera implícitamente obtenido al marcar el jefe como derrotado.
 
             item { Spacer(Modifier.height(80.dp)) }
         }
@@ -323,5 +397,14 @@ private fun AddCharacterDialog(
         }
     )
 }
+
+
+
+
+
+
+
+
+
 
 

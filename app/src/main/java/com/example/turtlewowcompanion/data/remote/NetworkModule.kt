@@ -9,21 +9,30 @@ import java.util.concurrent.TimeUnit
 
 object NetworkModule {
 
-    private val loggingInterceptor = HttpLoggingInterceptor().apply {
-        level = HttpLoggingInterceptor.Level.BODY
-    }
+    // Base URL configurada por buildType:
+    //   debug   → http://10.0.2.2:8084/  (emulador AVD apuntando al backend local)
+    //   release → URL pública (Render)
+    // Con USB + "adb reverse tcp:8084 tcp:8084" un móvil físico puede usar la URL del emulador.
+    private val baseUrl: String = BuildConfig.BASE_URL
 
     private val okHttpClient: OkHttpClient = OkHttpClient.Builder()
-        .addInterceptor(loggingInterceptor)
-        .connectTimeout(60, TimeUnit.SECONDS)
-        .readTimeout(60, TimeUnit.SECONDS)
-        .writeTimeout(60, TimeUnit.SECONDS)
-        .callTimeout(90, TimeUnit.SECONDS)
+        .addInterceptor(HttpLoggingInterceptor().apply {
+            level = if (BuildConfig.DEBUG) HttpLoggingInterceptor.Level.BASIC
+            else HttpLoggingInterceptor.Level.NONE
+        })
+        // Timeouts amplios: la primera petición tras un cold start del backend (Render free
+        // tier o arranque local) puede tardar bastantes segundos. Cubrimos hasta 90-120s
+        // para que el cliente no aborte la petición y el usuario vea el dato cuando llega.
+        .connectTimeout(90, TimeUnit.SECONDS)
+        .readTimeout(90, TimeUnit.SECONDS)
+        .writeTimeout(90, TimeUnit.SECONDS)
+        .callTimeout(120, TimeUnit.SECONDS)
+        .retryOnConnectionFailure(true)
         .build()
 
     val api: TurtleWowApi by lazy {
         Retrofit.Builder()
-            .baseUrl(BuildConfig.BASE_URL)
+            .baseUrl(baseUrl)
             .client(okHttpClient)
             .addConverterFactory(GsonConverterFactory.create())
             .build()

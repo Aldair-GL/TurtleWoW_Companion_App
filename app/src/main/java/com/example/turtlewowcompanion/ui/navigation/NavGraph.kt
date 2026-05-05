@@ -218,7 +218,7 @@ fun NavGraph(
             popExitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Right, tween(ANIM)) }
         ) { entry ->
             val id = entry.arguments?.getLong("id") ?: return@composable
-            BossDetailScreen(bossId = id, container = container, onBack = { navController.popBackStack() })
+            BossDetailScreen(bossId = id, container = container, onBack = { navController.popBackStack() }, userId = userId)
         }
 
         // ── Razas ──────────────────────────────────────────────────────────

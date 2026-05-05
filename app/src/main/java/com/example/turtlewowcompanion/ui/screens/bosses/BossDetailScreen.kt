@@ -13,12 +13,18 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
+import androidx.compose.material.icons.filled.RadioButtonUnchecked
+import androidx.compose.material.icons.filled.Whatshot
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -32,6 +38,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -48,7 +55,9 @@ import com.example.turtlewowcompanion.ui.common.ThemeBrushes
 import com.example.turtlewowcompanion.ui.common.UiState
 import com.example.turtlewowcompanion.ui.common.WowDivider
 import com.example.turtlewowcompanion.ui.theme.DarkBackground
+import com.example.turtlewowcompanion.ui.theme.FelGreen
 import com.example.turtlewowcompanion.ui.theme.GlassSurface
+import com.example.turtlewowcompanion.ui.theme.HordeRed
 import com.example.turtlewowcompanion.ui.theme.WowGold
 import kotlinx.coroutines.launch
 
@@ -58,15 +67,20 @@ fun BossDetailScreen(
     bossId: Long,
     container: AppContainer,
     onBack: () -> Unit,
+    userId: Long = 0,
     viewModel: BossViewModel = viewModel(factory = BossViewModel.Factory(container.bossRepository))
 ) {
     val state by viewModel.bossDetailState.collectAsState()
     val scope = rememberCoroutineScope()
     var isFavorite by remember { mutableStateOf(false) }
+    var isKilled by remember { mutableStateOf(false) }
 
     LaunchedEffect(bossId) {
         viewModel.loadBossById(bossId)
         isFavorite = container.favoriteRepository.isFavorite(bossId, FavoriteType.BOSS)
+        if (userId > 0) {
+            isKilled = container.userRepository.isBossKilled(userId, bossId)
+        }
     }
 
     Scaffold(
@@ -142,6 +156,31 @@ fun BossDetailScreen(
                             }
                         }
 
+                        // Botón "Marcar como derrotado" (solo si hay sesión)
+                        if (userId > 0) {
+                            Spacer(Modifier.height(12.dp))
+                            OutlinedButton(
+                                onClick = {
+                                    scope.launch {
+                                        container.userRepository.toggleBossKill(userId, boss.id, boss.name, boss.zoneName)
+                                        isKilled = !isKilled
+                                    }
+                                },
+                                modifier = Modifier.fillMaxWidth(),
+                                colors = ButtonDefaults.outlinedButtonColors(
+                                    contentColor = if (isKilled) FelGreen else HordeRed
+                                )
+                            ) {
+                                Icon(
+                                    if (isKilled) Icons.Default.CheckCircle else Icons.Default.Whatshot,
+                                    contentDescription = null,
+                                    tint = if (isKilled) FelGreen else HordeRed
+                                )
+                                Spacer(Modifier.width(8.dp))
+                                Text(if (isKilled) "Derrotado ✓" else "Marcar como derrotado")
+                            }
+                        }
+
                         // Descripción
                         if (boss.description.isNotBlank()) {
                             Spacer(Modifier.height(16.dp))
@@ -174,7 +213,7 @@ fun BossDetailScreen(
                             Text("Botín", style = MaterialTheme.typography.titleMedium, color = WowGold)
                             Spacer(Modifier.height(8.dp))
                             boss.lootItems.forEach { item ->
-                                LootItemCard(item)
+                                LootItemCard(item = item)
                                 Spacer(Modifier.height(8.dp))
                             }
                         }

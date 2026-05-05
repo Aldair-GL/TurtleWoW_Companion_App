@@ -47,7 +47,6 @@ import com.example.turtlewowcompanion.ui.common.ShimmerLoadingScreen
 import com.example.turtlewowcompanion.ui.common.ThemeBrushes
 import com.example.turtlewowcompanion.ui.common.UiState
 import com.example.turtlewowcompanion.ui.common.WowDivider
-import com.example.turtlewowcompanion.ui.common.racePortraitRes
 import com.example.turtlewowcompanion.ui.theme.DarkBackground
 import com.example.turtlewowcompanion.ui.theme.FactionThemeProvider
 import com.example.turtlewowcompanion.ui.theme.GlassSurface
@@ -130,7 +129,7 @@ fun RaceDetailScreen(
                             title = race.name,
                             subtitle = race.factionName,
                             backgroundBrush = ThemeBrushes.quests,
-                            imageRes = racePortraitRes(race.name) ?: R.drawable.img_hero_quests,
+                            imageRes = R.drawable.img_hero_quests,
                             height = 180.dp
                         )
 

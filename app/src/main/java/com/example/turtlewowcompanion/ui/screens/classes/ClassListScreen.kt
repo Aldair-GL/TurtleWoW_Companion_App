@@ -89,7 +89,6 @@ fun ClassListScreen(
                             subtitle = "${wowClass.roleLabel} · ${wowClass.resourceLabel}",
                             backgroundBrush = ThemeBrushes.npcs,
                             imageRes = classPortraitRes(wowClass.name),
-                            faction = "Neutral",
                             onClick = { onClassClick(wowClass.id) }
                         )
                     }
