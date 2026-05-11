@@ -79,7 +79,7 @@ fun ZoneListScreen(
             item {
                 WowCardEnhanced(
                     title = "Reinos del Este",
-                    subtitle = "Elwynn, Duskwood, Plaguelands y más",
+                    subtitle = "Elwynn, Bosque del Ocaso, Tierras de la Peste y más",
                     backgroundBrush = ThemeBrushes.zones,
                     faction = "Alliance",
                     onClick = onNavigateToOpenWorldEK
@@ -88,7 +88,7 @@ fun ZoneListScreen(
             item {
                 WowCardEnhanced(
                     title = "Kalimdor",
-                    subtitle = "Barrens, Ashenvale, Tanaris y más",
+                    subtitle = "Los Baldíos, Vallefresno, Tanaris y más",
                     backgroundBrush = ThemeBrushes.zones,
                     faction = "Horde",
                     onClick = onNavigateToOpenWorldKalimdor
@@ -103,7 +103,7 @@ fun ZoneListScreen(
             item {
                 WowCardEnhanced(
                     title = "Ciudades de la Alianza",
-                    subtitle = "Stormwind, Ironforge, Darnassus",
+                    subtitle = "Ventormenta, Forjaz, Darnassus",
                     backgroundBrush = ThemeBrushes.quests,
                     faction = "Alliance",
                     onClick = onNavigateToCitiesAlliance
@@ -112,7 +112,7 @@ fun ZoneListScreen(
             item {
                 WowCardEnhanced(
                     title = "Ciudades de la Horda",
-                    subtitle = "Orgrimmar, Thunder Bluff, Undercity",
+                    subtitle = "Orgrimmar, Cima del Trueno, Entrañas",
                     backgroundBrush = ThemeBrushes.quests,
                     faction = "Horde",
                     onClick = onNavigateToCitiesHorde
@@ -127,7 +127,7 @@ fun ZoneListScreen(
             item {
                 WowCardEnhanced(
                     title = "Mazmorras — Reinos del Este",
-                    subtitle = "Deadmines, Stockade, Scholomance...",
+                    subtitle = "Las Minas de la Muerte, La Mazmorra, Scholomance...",
                     backgroundBrush = ThemeBrushes.npcs,
                     faction = "Neutral",
                     onClick = onNavigateToDungeonsEK
@@ -136,7 +136,7 @@ fun ZoneListScreen(
             item {
                 WowCardEnhanced(
                     title = "Mazmorras — Kalimdor",
-                    subtitle = "Wailing Caverns, Dire Maul, Maraudon...",
+                    subtitle = "Cuevas de los Lamentos, La Masacre, Maraudon...",
                     backgroundBrush = ThemeBrushes.npcs,
                     faction = "Neutral",
                     onClick = onNavigateToDungeonsKalimdor

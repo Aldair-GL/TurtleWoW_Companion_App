@@ -136,6 +136,7 @@ fun ProfileScreen(
                         accentColor = when {
                             char.raceName.lowercase().let {
                                 it.contains("orc") || it.contains("undead") || it.contains("troll") || it.contains("tauren")
+                                    || it.contains("orco") || it.contains("no-muerto") || it.contains("renegado")
                             } -> HordeRed
                             else -> AllianceBlue
                         }
@@ -191,8 +192,22 @@ fun ProfileScreen(
                             Text(
                                 dp.zoneName,
                                 style = MaterialTheme.typography.bodyMedium,
-                                color = if (dp.completed) FelGreen else MaterialTheme.colorScheme.onSurface
+                                color = if (dp.completed) FelGreen else MaterialTheme.colorScheme.onSurface,
+                                modifier = Modifier.weight(1f)
                             )
+                            if (dp.completed) {
+                                IconButton(
+                                    onClick = { viewModel.unmarkDungeon(userId, dp.zoneId, dp.zoneName) },
+                                    modifier = Modifier.size(36.dp)
+                                ) {
+                                    Icon(
+                                        Icons.Default.Close,
+                                        contentDescription = "Desmarcar",
+                                        tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f),
+                                        modifier = Modifier.size(18.dp)
+                                    )
+                                }
+                            }
                         }
                     }
                 }
@@ -245,6 +260,17 @@ fun ProfileScreen(
                                     color = MaterialTheme.colorScheme.onSurfaceVariant
                                 )
                             }
+                            IconButton(
+                                onClick = { viewModel.unmarkBoss(userId, bk.bossId, bk.bossName, bk.zoneName) },
+                                modifier = Modifier.size(36.dp)
+                            ) {
+                                Icon(
+                                    Icons.Default.Close,
+                                    contentDescription = "Desmarcar",
+                                    tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f),
+                                    modifier = Modifier.size(18.dp)
+                                )
+                            }
                         }
                     }
                 }
@@ -260,9 +286,6 @@ fun ProfileScreen(
                     }
                 }
             }
-
-            // Sección loot conseguido — eliminada por simplificación.
-            // El loot se considera implícitamente obtenido al marcar el jefe como derrotado.
 
             item { Spacer(Modifier.height(80.dp)) }
         }
@@ -286,14 +309,14 @@ private fun AddCharacterDialog(
     onConfirm: (name: String, race: String, className: String, level: Int) -> Unit
 ) {
     var name by remember { mutableStateOf("") }
-    var selectedRace by remember { mutableStateOf("Human") }
-    var selectedClass by remember { mutableStateOf("Warrior") }
+    var selectedRace by remember { mutableStateOf("Humano") }
+    var selectedClass by remember { mutableStateOf("Guerrero") }
     var level by remember { mutableStateOf("1") }
     var raceExpanded by remember { mutableStateOf(false) }
     var classExpanded by remember { mutableStateOf(false) }
 
-    val races = listOf("Human", "Dwarf", "Night Elf", "Gnome", "Orc", "Undead", "Tauren", "Troll")
-    val classes = listOf("Warrior", "Paladin", "Hunter", "Rogue", "Priest", "Shaman", "Mage", "Warlock", "Druid")
+    val races = listOf("Humano", "Enano", "Elfo de la Noche", "Gnomo", "Orco", "No-muerto", "Tauren", "Troll")
+    val classes = listOf("Guerrero", "Paladín", "Cazador", "Pícaro", "Sacerdote", "Chamán", "Mago", "Brujo", "Druida")
 
     AlertDialog(
         onDismissRequest = onDismiss,
@@ -397,14 +420,3 @@ private fun AddCharacterDialog(
         }
     )
 }
-
-
-
-
-
-
-
-
-
-
-

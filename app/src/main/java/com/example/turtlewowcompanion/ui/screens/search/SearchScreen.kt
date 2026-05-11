@@ -82,7 +82,7 @@ fun SearchScreen(
             OutlinedTextField(
                 value = query,
                 onValueChange = viewModel::onQueryChange,
-                placeholder = { Text("Buscar zonas, quests, NPCs...") },
+                placeholder = { Text("Buscar zonas, razas, clases, jefes...") },
                 leadingIcon = { Icon(Icons.Default.Search, contentDescription = null, tint = WowGold) },
                 trailingIcon = {
                     if (query.isNotEmpty()) {

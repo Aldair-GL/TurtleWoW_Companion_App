@@ -32,6 +32,14 @@ fun ItemListScreen(
 
     val qualityFilters = listOf("POOR", "COMMON", "UNCOMMON", "RARE", "EPIC", "LEGENDARY")
     val typeFilters = listOf("WEAPON", "ARMOR", "CONSUMABLE", "TRADE", "RECIPE", "MISC")
+    val qualityLabelsEs = mapOf(
+        "POOR" to "Pobre", "COMMON" to "Común", "UNCOMMON" to "Poco común",
+        "RARE" to "Raro", "EPIC" to "Épico", "LEGENDARY" to "Legendario"
+    )
+    val typeLabelsEs = mapOf(
+        "WEAPON" to "Arma", "ARMOR" to "Armadura", "CONSUMABLE" to "Consumible",
+        "TRADE" to "Comercio", "RECIPE" to "Receta", "MISC" to "Varios"
+    )
     val qualityColors = mapOf(
         "POOR" to Color(0xFF9D9D9D), "COMMON" to Color.White, "UNCOMMON" to Color(0xFF1EFF00),
         "RARE" to Color(0xFF0070DD), "EPIC" to Color(0xFFA335EE), "LEGENDARY" to Color(0xFFFF8000)
@@ -104,7 +112,7 @@ fun ItemListScreen(
                                 FilterChip(
                                     selected = selectedQuality == q,
                                     onClick = { selectedQuality = if (selectedQuality == q) null else q },
-                                    label = { Text(q.lowercase().replaceFirstChar { it.uppercase() }) },
+                                    label = { Text(qualityLabelsEs[q] ?: q) },
                                     colors = FilterChipDefaults.filterChipColors(
                                         selectedContainerColor = (qualityColors[q] ?: WowGold).copy(alpha = 0.3f),
                                         selectedLabelColor = qualityColors[q] ?: WowGold
@@ -135,7 +143,7 @@ fun ItemListScreen(
                                 FilterChip(
                                     selected = selectedType == t,
                                     onClick = { selectedType = if (selectedType == t) null else t },
-                                    label = { Text(t.lowercase().replaceFirstChar { it.uppercase() }) },
+                                    label = { Text(typeLabelsEs[t] ?: t) },
                                     colors = FilterChipDefaults.filterChipColors(
                                         selectedContainerColor = WowGold.copy(alpha = 0.3f),
                                         selectedLabelColor = WowGold
@@ -154,7 +162,6 @@ fun ItemListScreen(
                     }
 
                     items(filtered, key = { it.id }) { item ->
-                        val qColor = qualityColors[item.quality] ?: Color.White
                         WowCardEnhanced(
                             title = item.name,
                             subtitle = "${item.qualityLabel} · ${item.typeLabel}",

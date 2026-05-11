@@ -175,13 +175,14 @@ private fun isHordeFaction(faction: String?): Boolean {
  */
 private fun isAllianceRace(name: String): Boolean {
     val n = name.lowercase()
-    return listOf("human", "humano", "dwarf", "enano", "night elf", "elfo de la noche",
-        "nightelf", "gnome", "gnomo").any { n.contains(it) }
+    return listOf("human", "humano", "humana", "dwarf", "enano", "enana",
+        "night elf", "elfo de la noche", "elfa de la noche",
+        "nightelf", "gnome", "gnomo", "gnoma").any { n.contains(it) }
 }
 
 private fun isHordeRace(name: String): Boolean {
     val n = name.lowercase()
-    return listOf("orc", "orco", "undead", "no-muerto", "no muerto", "forsaken",
-        "renegado", "tauren", "troll").any { n.contains(it) }
+    return listOf("orc", "orco", "orca", "undead", "no-muerto", "no muerto",
+        "forsaken", "renegado", "renegada", "tauren", "troll").any { n.contains(it) }
 }
 

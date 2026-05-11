@@ -43,6 +43,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.turtlewowcompanion.R
+import com.example.turtlewowcompanion.ui.common.ImageMapper
 import com.example.turtlewowcompanion.di.AppContainer
 import com.example.turtlewowcompanion.domain.model.FavoriteType
 import com.example.turtlewowcompanion.domain.model.LootItem
@@ -139,7 +140,7 @@ fun BossDetailScreen(
                         title = boss.name,
                         subtitle = boss.zoneName,
                         backgroundBrush = ThemeBrushes.npcs,
-                        imageRes = R.drawable.img_npc_boss,
+                        imageRes = ImageMapper.bossImageRes(boss.name) ?: R.drawable.img_npc_boss,
                         height = 180.dp
                     )
 

@@ -76,6 +76,14 @@ class ProfileViewModel(private val userRepository: UserRepository) : ViewModel()
         viewModelScope.launch { userRepository.deleteCharacter(userId, characterId) }
     }
 
+    fun unmarkDungeon(userId: Long, zoneId: Long, zoneName: String) {
+        viewModelScope.launch { userRepository.toggleDungeonCompletion(userId, zoneId, zoneName) }
+    }
+
+    fun unmarkBoss(userId: Long, bossId: Long, bossName: String, zoneName: String) {
+        viewModelScope.launch { userRepository.toggleBossKill(userId, bossId, bossName, zoneName) }
+    }
+
     fun clearError() { _errorMessage.value = null }
 
     class Factory(private val userRepository: UserRepository) : ViewModelProvider.Factory {

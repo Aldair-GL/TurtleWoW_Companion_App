@@ -76,7 +76,12 @@ fun ZoneCategoryScreen(
             )
             is UiState.Success -> {
                 val filtered = s.data.filter { zone ->
-                    val typeMatch = zone.zoneType.equals(zoneType, ignoreCase = true)
+                    val typeMatch = if (zoneType.equals("OPEN_WORLD", ignoreCase = true)) {
+                        zone.zoneType.equals("OPEN_WORLD", ignoreCase = true) ||
+                            zone.zoneType.equals("CONTESTED", ignoreCase = true)
+                    } else {
+                        zone.zoneType.equals(zoneType, ignoreCase = true)
+                    }
                     val continentMatch = continent == null ||
                         zone.continent.equals(continent, ignoreCase = true)
                     val factionMatch = factionFilter == null || matchesFaction(zone.faction, factionFilter)

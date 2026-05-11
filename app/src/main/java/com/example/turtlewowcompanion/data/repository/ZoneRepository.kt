@@ -18,9 +18,16 @@ class ZoneRepository(
     fun getZones(): Flow<UiState<List<Zone>>> = flow {
         emit(UiState.Loading)
         try {
-            val response = api.getZones(page = 0, size = 200)
-            val zones = response.content
-            zoneDao.upsertAll(zones.map { it.toEntity() })
+            // Traer todas las páginas para no perder zonas
+            val allZones = mutableListOf<com.example.turtlewowcompanion.data.remote.dto.ZoneDto>()
+            var page = 0
+            do {
+                val response = api.getZones(page = page, size = 200)
+                allZones.addAll(response.content)
+                page++
+            } while (!response.last)
+
+            zoneDao.upsertAll(allZones.map { it.toEntity() })
             zoneDao.observeAll().collect { entities ->
                 emit(UiState.Success(entities.map { it.toDomain() }))
             }
