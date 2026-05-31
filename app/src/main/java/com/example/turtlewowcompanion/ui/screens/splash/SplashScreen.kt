@@ -66,7 +66,7 @@ fun SplashScreen(onFinished: () -> Unit) {
         ) {
             // Icono del escudo personalizado
             Image(
-                painter = painterResource(R.drawable.ic_launcher_foreground),
+                painter = painterResource(R.drawable.ic_app_logo),
                 contentDescription = "Logo",
                 modifier = Modifier.size(140.dp)
             )
