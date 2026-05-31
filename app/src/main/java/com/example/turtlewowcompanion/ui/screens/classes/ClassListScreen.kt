@@ -28,9 +28,9 @@ import com.example.turtlewowcompanion.ui.common.ErrorScreen
 import com.example.turtlewowcompanion.ui.common.HeroHeader
 import com.example.turtlewowcompanion.ui.common.ShimmerLoadingScreen
 import com.example.turtlewowcompanion.ui.common.ThemeBrushes
+import com.example.turtlewowcompanion.ui.common.classPortraitRes
 import com.example.turtlewowcompanion.ui.common.UiState
 import com.example.turtlewowcompanion.ui.common.WowCardEnhanced
-import com.example.turtlewowcompanion.ui.common.classPortraitRes
 import com.example.turtlewowcompanion.ui.theme.DarkBackground
 import com.example.turtlewowcompanion.ui.theme.GlassSurface
 

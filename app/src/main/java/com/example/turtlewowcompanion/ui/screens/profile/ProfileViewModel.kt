@@ -1,5 +1,6 @@
 package com.example.turtlewowcompanion.ui.screens.profile
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -59,6 +60,7 @@ class ProfileViewModel(private val userRepository: UserRepository) : ViewModel()
         }
         viewModelScope.launch {
             userRepository.observeLoot(userId).collect {
+                Log.d("LootDebug", "Profile loot flow emit size=${it.size} -> ${it.map { lp -> "${lp.id}:'${lp.itemName}'" }}")
                 _loot.value = it
                 _lootCount.value = it.size
             }

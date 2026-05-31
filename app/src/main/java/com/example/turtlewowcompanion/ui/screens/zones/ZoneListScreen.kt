@@ -81,6 +81,7 @@ fun ZoneListScreen(
                     title = "Reinos del Este",
                     subtitle = "Elwynn, Bosque del Ocaso, Tierras de la Peste y más",
                     backgroundBrush = ThemeBrushes.zones,
+                    imageRes = R.drawable.img_header_ek_open,
                     faction = "Alliance",
                     onClick = onNavigateToOpenWorldEK
                 )
@@ -90,6 +91,7 @@ fun ZoneListScreen(
                     title = "Kalimdor",
                     subtitle = "Los Baldíos, Vallefresno, Tanaris y más",
                     backgroundBrush = ThemeBrushes.zones,
+                    imageRes = R.drawable.img_header_kalimdor_open,
                     faction = "Horde",
                     onClick = onNavigateToOpenWorldKalimdor
                 )
@@ -105,6 +107,7 @@ fun ZoneListScreen(
                     title = "Ciudades de la Alianza",
                     subtitle = "Ventormenta, Forjaz, Darnassus",
                     backgroundBrush = ThemeBrushes.quests,
+                    imageRes = R.drawable.img_header_alliance_cities,
                     faction = "Alliance",
                     onClick = onNavigateToCitiesAlliance
                 )
@@ -114,6 +117,7 @@ fun ZoneListScreen(
                     title = "Ciudades de la Horda",
                     subtitle = "Orgrimmar, Cima del Trueno, Entrañas",
                     backgroundBrush = ThemeBrushes.quests,
+                    imageRes = R.drawable.img_header_horde_cities,
                     faction = "Horde",
                     onClick = onNavigateToCitiesHorde
                 )
@@ -129,6 +133,7 @@ fun ZoneListScreen(
                     title = "Mazmorras — Reinos del Este",
                     subtitle = "Las Minas de la Muerte, La Mazmorra, Scholomance...",
                     backgroundBrush = ThemeBrushes.npcs,
+                    imageRes = R.drawable.img_header_ek_dungeons,
                     faction = "Neutral",
                     onClick = onNavigateToDungeonsEK
                 )
@@ -138,6 +143,7 @@ fun ZoneListScreen(
                     title = "Mazmorras — Kalimdor",
                     subtitle = "Cuevas de los Lamentos, La Masacre, Maraudon...",
                     backgroundBrush = ThemeBrushes.npcs,
+                    imageRes = R.drawable.img_header_kalimdor_dungeons,
                     faction = "Neutral",
                     onClick = onNavigateToDungeonsKalimdor
                 )

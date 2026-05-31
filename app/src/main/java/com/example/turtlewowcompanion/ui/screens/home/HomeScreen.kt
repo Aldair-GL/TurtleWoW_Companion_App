@@ -132,7 +132,7 @@ fun HomeScreen(
             )
             HomeCategoryCardEnhanced(
                 title = "Razas",
-                description = "8 razas jugables de la Alianza y la Horda",
+                description = "8 razas jugables de Alianza y Horda",
                 icon = Icons.AutoMirrored.Filled.MenuBook,
                 backgroundBrush = ThemeBrushes.quests,
                 imageRes = R.drawable.img_cat_quests,
@@ -151,7 +151,7 @@ fun HomeScreen(
                 description = "Oficios primarios y secundarios de Azeroth",
                 icon = Icons.Default.Build,
                 backgroundBrush = ThemeBrushes.quests,
-                imageRes = optionalHomeRes("img_cat_professions"),
+                imageRes = R.drawable.img_cat_professions,
                 onClick = onNavigateToProfessions
             )
             HomeCategoryCardEnhanced(
@@ -159,7 +159,7 @@ fun HomeScreen(
                 description = "Armas, armaduras y tesoros del mundo",
                 icon = Icons.Default.Inventory2,
                 backgroundBrush = ThemeBrushes.npcs,
-                imageRes = optionalHomeRes("img_cat_items"),
+                imageRes = R.drawable.img_cat_items,
                 onClick = onNavigateToItems
             )
         }
@@ -251,11 +251,3 @@ private fun HomeCategoryCardEnhanced(
     }
 }
 
-private fun optionalHomeRes(name: String): Int? {
-    return try {
-        val field = R.drawable::class.java.getDeclaredField(name)
-        field.getInt(null)
-    } catch (_: Exception) {
-        null
-    }
-}

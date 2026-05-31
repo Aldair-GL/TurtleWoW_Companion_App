@@ -1,5 +1,6 @@
 package com.example.turtlewowcompanion.data.repository
 
+import android.util.Log
 
 import com.example.turtlewowcompanion.data.local.dao.BossKillProgressDao
 import com.example.turtlewowcompanion.data.local.dao.DungeonProgressDao
@@ -318,6 +319,7 @@ class UserRepository(
     ) {
         if (userDao.getById(userId) == null) return
         val existing = lootProgressDao.getByUserItemAndBoss(userId, itemName, bossId)
+        Log.d("LootDebug", "toggleLoot user=$userId item='$itemName' boss=$bossId/'$bossName' existing=${existing != null}")
 
         if (api != null) {
             try {
@@ -326,15 +328,15 @@ class UserRepository(
                 } else {
                     api.deleteLoot(userId, LootDeleteDto(itemName, bossId))
                 }
-            } catch (_: java.io.IOException) {
-                // sin red: aplicamos el cambio solo en local
-            } catch (_: retrofit2.HttpException) {
-                // backend rechazó: mantenemos coherencia local
+            } catch (e: java.io.IOException) {
+                Log.w("LootDebug", "toggleLoot offline (IO): ${e.message}")
+            } catch (e: retrofit2.HttpException) {
+                Log.w("LootDebug", "toggleLoot HTTP ${e.code()}: ${e.message()}")
             }
         }
 
         if (existing == null) {
-            lootProgressDao.insert(
+            val newId = lootProgressDao.insert(
                 LootProgressEntity(
                     userId = userId,
                     itemName = itemName,
@@ -343,8 +345,10 @@ class UserRepository(
                     bossName = bossName
                 )
             )
+            Log.d("LootDebug", "Local insert returned id=$newId for item='$itemName'")
         } else {
             lootProgressDao.deleteByUserItemAndBoss(userId, itemName, bossId)
+            Log.d("LootDebug", "Local delete for item='$itemName'")
         }
     }
 

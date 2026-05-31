@@ -2,9 +2,7 @@ package com.example.turtlewowcompanion.ui.screens.zones
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -76,15 +74,15 @@ fun ZoneCategoryScreen(
             )
             is UiState.Success -> {
                 val filtered = s.data.filter { zone ->
-                    val typeMatch = if (zoneType.equals("OPEN_WORLD", ignoreCase = true)) {
-                        zone.zoneType.equals("OPEN_WORLD", ignoreCase = true) ||
-                            zone.zoneType.equals("CONTESTED", ignoreCase = true)
-                    } else {
-                        zone.zoneType.equals(zoneType, ignoreCase = true)
+                    val typeMatch = zone.zoneType == zoneType
+                    val continentMatch = continent == null || zone.continent == continent
+                    val factionMatch = factionFilter == null || run {
+                        val f = zone.faction.lowercase()
+                        val filter = factionFilter.lowercase()
+                        f.contains(filter) ||
+                            (filter == "alliance" && f.contains("alianza")) ||
+                            (filter == "horde" && f.contains("horda"))
                     }
-                    val continentMatch = continent == null ||
-                        zone.continent.equals(continent, ignoreCase = true)
-                    val factionMatch = factionFilter == null || matchesFaction(zone.faction, factionFilter)
                     typeMatch && continentMatch && factionMatch
                 }
                 LazyColumn(
@@ -101,18 +99,6 @@ fun ZoneCategoryScreen(
                             height = 140.dp
                         )
                     }
-                    if (filtered.isEmpty()) {
-                        item {
-                            Spacer(Modifier.height(8.dp))
-                            Text(
-                                text = "No hay zonas que mostrar en esta categoría.\n" +
-                                    "Comprueba que el backend está activo y que la base de datos contiene zonas para los filtros aplicados.",
-                                style = MaterialTheme.typography.bodyMedium,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                                modifier = Modifier.padding(horizontal = 8.dp, vertical = 16.dp)
-                            )
-                        }
-                    }
                     items(filtered, key = { it.id }) { zone ->
                         WowCardEnhanced(
                             title = zone.name,
@@ -126,20 +112,6 @@ fun ZoneCategoryScreen(
                 }
             }
         }
-    }
-}
-
-/**
- * Acepta múltiples variantes de nombre de facción que pueda devolver el backend
- * (inglés, español, mayúsculas, abreviaturas) para que el filtrado nunca quede
- * vacío por una diferencia de cadena trivial.
- */
-private fun matchesFaction(zoneFaction: String, target: String): Boolean {
-    val zf = zoneFaction.lowercase().trim()
-    return when (target.lowercase().trim()) {
-        "alliance" -> zf.contains("alliance") || zf.contains("alianza") || zf == "ally"
-        "horde" -> zf.contains("horde") || zf.contains("horda")
-        else -> zf.contains(target, ignoreCase = true)
     }
 }
 

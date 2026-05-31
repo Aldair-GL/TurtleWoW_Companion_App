@@ -6,9 +6,9 @@ data class Profession(
     val description: String,
     val type: String
 ) {
-    val typeLabel: String get() = when (type) {
-        "PRIMARY"   -> "Primaria"
-        "SECONDARY" -> "Secundaria"
-        else        -> type
+    val typeLabel: String get() = when (type.uppercase()) {
+        "PRIMARY", "PRIMARIA"     -> "Primaria"
+        "SECONDARY", "SECUNDARIA" -> "Secundaria"
+        else                      -> type
     }
 }

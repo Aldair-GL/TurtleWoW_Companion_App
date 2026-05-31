@@ -69,11 +69,8 @@ fun RaceListScreen(
                 modifier = Modifier.padding(padding)
             )
             is UiState.Success -> {
-                val races = s.data
-                val alliance = races.filter { isAllianceFaction(it.factionName) || isAllianceRace(it.name) }
-                val horde = races.filter { isHordeFaction(it.factionName) || isHordeRace(it.name) }
-                val classified = (alliance + horde).map { it.id }.toSet()
-                val others = races.filterNot { classified.contains(it.id) }
+                val alliance = s.data.filter { it.factionName.contains("Alliance", ignoreCase = true) || it.factionName.contains("Alianza", ignoreCase = true) }
+                val horde = s.data.filter { it.factionName.contains("Horde", ignoreCase = true) || it.factionName.contains("Horda", ignoreCase = true) }
 
                 LazyColumn(
                     modifier = Modifier.fillMaxSize().padding(padding),
@@ -83,106 +80,47 @@ fun RaceListScreen(
                     item {
                         HeroHeader(
                             title = "Razas de Azeroth",
-                            subtitle = "${races.size} razas jugables",
+                            subtitle = "${s.data.size} razas jugables",
                             backgroundBrush = ThemeBrushes.quests,
                             imageRes = R.drawable.img_hero_quests,
                             height = 140.dp
                         )
                     }
 
-                    if (races.isEmpty()) {
-                        item {
-                            Spacer(Modifier.height(8.dp))
-                            Text(
-                                text = "No hay razas disponibles. Comprueba que el backend está activo y que la base de datos contiene razas.",
-                                style = MaterialTheme.typography.bodyMedium,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant
-                            )
-                        }
+                    // Alianza
+                    item {
+                        Spacer(Modifier.height(4.dp))
+                        Text("Alianza", style = MaterialTheme.typography.titleMedium, color = AllianceBlue)
+                    }
+                    items(alliance, key = { it.id }) { race ->
+                        WowCardEnhanced(
+                            title = race.name,
+                            subtitle = race.factionName,
+                            backgroundBrush = ThemeBrushes.quests,
+                            imageRes = racePortraitRes(race.name),
+                            faction = race.factionName,
+                            onClick = { onRaceClick(race.id) }
+                        )
                     }
 
-                    if (alliance.isNotEmpty()) {
-                        item {
-                            Spacer(Modifier.height(4.dp))
-                            Text("Alianza", style = MaterialTheme.typography.titleMedium, color = AllianceBlue)
-                        }
-                        items(alliance, key = { "ally-${it.id}" }) { race ->
-                            WowCardEnhanced(
-                                title = race.name,
-                                subtitle = race.factionName.ifBlank { "Alliance" },
-                                backgroundBrush = ThemeBrushes.quests,
-                                imageRes = racePortraitRes(race.name),
-                                faction = "Alliance",
-                                onClick = { onRaceClick(race.id) }
-                            )
-                        }
+                    // Horda
+                    item {
+                        Spacer(Modifier.height(4.dp))
+                        Text("Horda", style = MaterialTheme.typography.titleMedium, color = HordeRed)
                     }
-
-                    if (horde.isNotEmpty()) {
-                        item {
-                            Spacer(Modifier.height(4.dp))
-                            Text("Horda", style = MaterialTheme.typography.titleMedium, color = HordeRed)
-                        }
-                        items(horde, key = { "horde-${it.id}" }) { race ->
-                            WowCardEnhanced(
-                                title = race.name,
-                                subtitle = race.factionName.ifBlank { "Horde" },
-                                backgroundBrush = ThemeBrushes.quests,
-                                imageRes = racePortraitRes(race.name),
-                                faction = "Horde",
-                                onClick = { onRaceClick(race.id) }
-                            )
-                        }
-                    }
-
-                    if (others.isNotEmpty()) {
-                        item {
-                            Spacer(Modifier.height(4.dp))
-                            Text("Otras", style = MaterialTheme.typography.titleMedium, color = WowGold)
-                        }
-                        items(others, key = { "other-${it.id}" }) { race ->
-                            WowCardEnhanced(
-                                title = race.name,
-                                subtitle = race.factionName.ifBlank { "Neutral" },
-                                backgroundBrush = ThemeBrushes.quests,
-                                imageRes = racePortraitRes(race.name),
-                                faction = race.factionName,
-                                onClick = { onRaceClick(race.id) }
-                            )
-                        }
+                    items(horde, key = { it.id }) { race ->
+                        WowCardEnhanced(
+                            title = race.name,
+                            subtitle = race.factionName,
+                            backgroundBrush = ThemeBrushes.quests,
+                            imageRes = racePortraitRes(race.name),
+                            faction = race.factionName,
+                            onClick = { onRaceClick(race.id) }
+                        )
                     }
                 }
             }
         }
     }
-}
-
-/** Reconoce variantes habituales: "Alliance", "ALLIANCE", "Alianza", etc. */
-private fun isAllianceFaction(faction: String?): Boolean {
-    val f = faction?.lowercase()?.trim().orEmpty()
-    return f.contains("alliance") || f.contains("alianza")
-}
-
-private fun isHordeFaction(faction: String?): Boolean {
-    val f = faction?.lowercase()?.trim().orEmpty()
-    return f.contains("horde") || f.contains("horda")
-}
-
-/**
- * Fallback por nombre de raza: si el backend devuelve `factionName` vacío, neutral o
- * con algo no reconocible, clasificamos por la raza concreta para que la lista
- * no se vea vacía.
- */
-private fun isAllianceRace(name: String): Boolean {
-    val n = name.lowercase()
-    return listOf("human", "humano", "humana", "dwarf", "enano", "enana",
-        "night elf", "elfo de la noche", "elfa de la noche",
-        "nightelf", "gnome", "gnomo", "gnoma").any { n.contains(it) }
-}
-
-private fun isHordeRace(name: String): Boolean {
-    val n = name.lowercase()
-    return listOf("orc", "orco", "orca", "undead", "no-muerto", "no muerto",
-        "forsaken", "renegado", "renegada", "tauren", "troll").any { n.contains(it) }
 }
 

@@ -24,7 +24,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.turtlewowcompanion.R
-import com.example.turtlewowcompanion.ui.common.ImageMapper
 import com.example.turtlewowcompanion.di.AppContainer
 import com.example.turtlewowcompanion.ui.common.ErrorScreen
 import com.example.turtlewowcompanion.ui.common.HeroHeader
@@ -93,7 +92,7 @@ fun BossListScreen(
                             title = boss.name,
                             subtitle = if (boss.level != null) "Nivel ${boss.level}" else "Jefe",
                             backgroundBrush = ThemeBrushes.npcs,
-                            imageRes = ImageMapper.bossImageRes(boss.name) ?: R.drawable.img_npc_boss,
+                            imageRes = null,
                             faction = "Neutral",
                             onClick = { onBossClick(boss.id) }
                         )
